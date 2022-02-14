@@ -1,6 +1,7 @@
 package com.sportal.service;
 
 import com.sportal.exceptions.BadRequestException;
+import com.sportal.model.dto.UserGetAllResponseDTO;
 import com.sportal.model.dto.UserRegisterRequestDTO;
 import com.sportal.model.dto.UserRegisterResponseDTO;
 import com.sportal.model.pojo.User;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.sportal.util.Validator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -38,7 +42,13 @@ public class UserService {
         return responseUserDTO;
     }
 
-//    public List<User> getAllUsers(){
-//
-//    }
+    public List<UserGetAllResponseDTO> getAllUsers(){
+        List<User> users = userRepository.findAll();
+        List<UserGetAllResponseDTO> userGetAllResponseDTOS = new ArrayList<>();
+
+        for (User user : users) {
+            userGetAllResponseDTOS.add(new UserGetAllResponseDTO(user));
+        }
+        return userGetAllResponseDTOS;
+    }
 }
