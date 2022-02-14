@@ -5,21 +5,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Component
-public class UserGetAllResponseDTO {
-    private int id;
+public class UserGetByIdResponseDTO {
     private String firstName;
     private String lastName;
     private String username;
     private String email;
 
-    public UserGetAllResponseDTO(User user) {
+    public UserGetByIdResponseDTO(User user) {
         this.firstName = user.getFirst_name();
         this.lastName = user.getLast_name();
-        this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
     }

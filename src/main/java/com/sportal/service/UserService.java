@@ -2,6 +2,7 @@ package com.sportal.service;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.model.dto.UserGetAllResponseDTO;
+import com.sportal.model.dto.UserGetByIdResponseDTO;
 import com.sportal.model.dto.UserRegisterRequestDTO;
 import com.sportal.model.dto.UserRegisterResponseDTO;
 import com.sportal.model.pojo.User;
@@ -50,5 +51,11 @@ public class UserService {
             userGetAllResponseDTOS.add(new UserGetAllResponseDTO(user));
         }
         return userGetAllResponseDTOS;
+    }
+
+    public UserGetByIdResponseDTO getById(int id){
+        User user = userRepository.getById(id);
+        UserGetByIdResponseDTO userGetByIdResponseDTO = new UserGetByIdResponseDTO(user);
+        return userGetByIdResponseDTO;
     }
 }
