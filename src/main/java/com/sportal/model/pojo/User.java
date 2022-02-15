@@ -3,7 +3,7 @@ package com.sportal.model.pojo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.sportal.model.dto.UserRegisterRequestDTO;
+import com.sportal.model.dto.userDTO.UserRegisterRequestDTO;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.Entity;

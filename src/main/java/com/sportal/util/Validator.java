@@ -37,7 +37,7 @@ public class Validator {
             throw new BadRequestException("Username cannot be empty");
         }
         username = username.trim();
-        if(username.length() < 3){
+        if(username.length() < 2){
             throw new BadRequestException("Username too short");
         }
     }

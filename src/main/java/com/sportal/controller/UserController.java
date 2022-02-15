@@ -1,24 +1,29 @@
 package com.sportal.controller;
 
-import com.sportal.model.dto.UserGetAllResponseDTO;
-import com.sportal.model.dto.UserGetByIdResponseDTO;
-import com.sportal.model.dto.UserRegisterRequestDTO;
-import com.sportal.model.dto.UserRegisterResponseDTO;
-import com.sportal.model.pojo.User;
+import com.sportal.exceptions.AuthenticationException;
+import com.sportal.model.dto.userDTO.*;
 import com.sportal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
 @RestController
 public class UserController {
+    public static final String LOGGED_IN = "LOGGED_IN";
+    public static final String LOGGED_FROM = "LOGGED_FROM";
     @Autowired
     private UserService userService;
 
     @GetMapping("/users")
     public List<UserGetAllResponseDTO> getAllUsers(){
+        //TODO Add right only for admin users
         return userService.getAllUsers();
     }
     @GetMapping("/users/{id}")
@@ -27,11 +32,24 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/users/register")
-    public UserRegisterResponseDTO register(@RequestBody UserRegisterRequestDTO userDTO) {
-        //TODO add session
-        return userService.registerUser(userDTO);
+    @PostMapping("/users/register")
+    public ResponseEntity<UserRegisterResponseDTO> register(@RequestBody UserRegisterRequestDTO userDTO) {
+        return new ResponseEntity(userService.registerUser(userDTO), HttpStatus.CREATED);
     }
 
+    @PostMapping("/users/login")
+    public ResponseEntity<UserLoginResponseDTO> login(@RequestBody UserLoginRequestDTO userDTO, HttpSession session, HttpServletRequest request){
+        //TODO check if session exists
 
+        UserLoginResponseDTO user = userService.login(userDTO);
+        session.setAttribute(LOGGED_IN, user.getId());
+        session.setMaxInactiveInterval(60*60*3);
+        return new ResponseEntity(user,HttpStatus.OK);
+    }
+
+    @PutMapping("/users/edit")
+    public  ResponseEntity<UserEditDTO> editUser(@RequestBody UserEditDTO userDTO,HttpSession session){
+        //TODO check if user is logged in
+        return new ResponseEntity(userService.editUser(userDTO),HttpStatus.OK);
+    }
 }
