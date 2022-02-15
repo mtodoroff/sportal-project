@@ -6,20 +6,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+@Component
 @Getter
 @Setter
 @NoArgsConstructor
-@Component
-public class UserGetByIdResponseDTO {
-    private String firstName;
-    private String lastName;
+public class UserLoginResponseDTO {
+    private int id;
     private String username;
-    private String email;
+    private String loginMsg ;
 
-    public UserGetByIdResponseDTO(User user) {
-        this.firstName = user.getFirst_name();
-        this.lastName = user.getLast_name();
+    public UserLoginResponseDTO(User user){
+        this.id = user.getId();
         this.username = user.getUsername();
-        this.email = user.getEmail();
+        this.loginMsg = "Welcome " + this.username + "! You successfully logged in!";
     }
+
+
 }

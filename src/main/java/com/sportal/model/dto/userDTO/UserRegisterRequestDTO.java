@@ -1,4 +1,4 @@
-package com.sportal.model.dto;
+package com.sportal.model.dto.userDTO;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +20,7 @@ public class UserRegisterRequestDTO {
     private String password;
     private String confirmPassword;
     private String phone;
+    @Email
     private String email;
 
 

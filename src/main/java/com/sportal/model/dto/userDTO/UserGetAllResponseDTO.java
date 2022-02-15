@@ -1,4 +1,4 @@
-package com.sportal.model.dto;
+package com.sportal.model.dto.userDTO;
 
 import com.sportal.model.pojo.User;
 import lombok.Getter;

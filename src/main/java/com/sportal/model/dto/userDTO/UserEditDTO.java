@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 @Setter
 @NoArgsConstructor
 @Component
-public class UserGetByIdResponseDTO {
+public class UserEditDTO {
+    private int id;
     private String firstName;
     private String lastName;
-    private String username;
-    private String email;
+    private String phone;
 
-    public UserGetByIdResponseDTO(User user) {
+    public UserEditDTO(User user) {
+        this.id = user.getId();
         this.firstName = user.getFirst_name();
         this.lastName = user.getLast_name();
-        this.username = user.getUsername();
-        this.email = user.getEmail();
+        this.phone = user.getPhone();
     }
 }
