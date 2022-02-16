@@ -4,6 +4,7 @@ import com.sportal.exceptions.AuthenticationException;
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.userDTO.*;
+import com.sportal.model.pojo.Category;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.UserRepository;
 import org.modelmapper.ModelMapper;

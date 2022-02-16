@@ -1,9 +1,9 @@
 package com.sportal.controller;
 
-import com.sportal.exceptions.AuthenticationException;
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.model.dto.userDTO.*;
 import com.sportal.service.SessionService;
+
 import com.sportal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,12 +26,13 @@ public class UserController {
 
 
     @GetMapping("/users")
-    public List<UserGetAllResponseDTO> getAllUsers(){
+    public List<UserGetAllResponseDTO> getAllUsers() {
         //TODO Add right only for admin users
         return userService.getAllUsers();
     }
+
     @GetMapping("/users/{id}")
-    public UserGetByIdResponseDTO getById(@PathVariable int id){
+    public UserGetByIdResponseDTO getById(@PathVariable int id) {
         return userService.getById(id);
     }
 
@@ -43,37 +44,40 @@ public class UserController {
     }
 
     @PostMapping("/users/login")
+
     @Validated
-    public ResponseEntity<UserLoginResponseDTO> login(@Valid @RequestBody UserLoginRequestDTO userDTO, HttpSession session){
-        if (sessionService.userAlreadyLogged(session)){
+    public ResponseEntity<UserLoginResponseDTO> login(@Valid @RequestBody UserLoginRequestDTO userDTO, HttpSession session) {
+        if (sessionService.userAlreadyLogged(session)) {
             throw new BadRequestException("You are already logged in!");
         }
         UserLoginResponseDTO userLoginResponseDTO = userService.login(userDTO);
-        session.setMaxInactiveInterval(60*60*3);
+        session.setMaxInactiveInterval(60 * 60 * 3);
         sessionService.loginUser(session, userLoginResponseDTO.getId());
-        return new ResponseEntity(userLoginResponseDTO,HttpStatus.OK);
+        return new ResponseEntity(userLoginResponseDTO, HttpStatus.OK);
     }
 
     @PostMapping("/users/logout")
-    public ResponseEntity<UserLogoutDTO> logout(HttpSession session, HttpServletRequest request){
+    public ResponseEntity<UserLogoutDTO> logout(HttpSession session, HttpServletRequest request) {
         session.invalidate();
-        return new ResponseEntity<>(new UserLogoutDTO("You have been loged out."),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(new UserLogoutDTO("You have been loged out."), HttpStatus.ACCEPTED);
     }
+
     @PutMapping("/users/edit")
     @Validated
-    public  ResponseEntity<UserEditDTO> editUser(@Valid @RequestBody UserEditDTO userDTO,HttpSession session){
-        if (!sessionService.userAlreadyLogged(session)){
+    public ResponseEntity<UserEditDTO> editUser(@Valid @RequestBody UserEditDTO userDTO, HttpSession session) {
+        if (!sessionService.userAlreadyLogged(session)) {
             throw new BadRequestException("You must be logged in!");
         }
-        return new ResponseEntity(userService.editUser(userDTO),HttpStatus.OK);
+        return new ResponseEntity(userService.editUser(userDTO), HttpStatus.OK);
     }
 
     @PatchMapping("/users/change-password")
     @Validated
-    public  ResponseEntity<String> changePassword(@Valid @RequestBody UserChangePasswordRequest userChangePasswordRequest,HttpSession session, HttpServletRequest request){
-        if (!sessionService.userAlreadyLogged(session)){
+    public ResponseEntity<String> changePassword(@Valid @RequestBody UserChangePasswordRequest userChangePasswordRequest, HttpSession session, HttpServletRequest request) {
+        if (!sessionService.userAlreadyLogged(session)) {
             throw new BadRequestException("You must be logged in!");
         }
+
         userService.changePassword(userChangePasswordRequest);
         return ResponseEntity.ok().body("Password was changed successfully.");
     }
