@@ -29,8 +29,8 @@ public class Article {
     private long views;
     @OneToOne
     @JoinColumn(name="author_id")
-    private User author_id;
+    private User user;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="category_id")
-    private Category category_id;
+    private Category category;
 }
