@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotBlank;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @Component
-public class UserLoginRequestDTO {
-    private String username;
-    private String password;
+public class UserChangePasswordRequest {
+    private long id;
+    private String oldPassword;
+    private String newPassword;
+    private String confirmNewPassword;
+
 }

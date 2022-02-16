@@ -1,13 +1,13 @@
 package com.sportal.model.pojo;
 
+import com.sportal.model.pojo.enums.RoleName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import com.sportal.model.dto.userDTO.UserRegisterRequestDTO;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 
 @NoArgsConstructor
@@ -16,26 +16,40 @@ import java.time.Instant;
 @Entity
 @Table(name="users")
 @Component
-public class User extends BasePOJO {
-    private String first_name;
-    private String last_name;
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Column(name = "first_name")
+    private String firstName;
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name="username")
     private String username;
+    @Column(name = "email")
     private String email;
+    @Column(name = "password")
     private String password;
+    @Column(name = "phone")
     private String phone;
+//    @ManyToOne
+//    private Role role;
+    @Column(name = "created_at")
     private Instant created_at;
+    @Column(name = "updated_at")
     private Instant updated_at;
 
     //TODO add Role enums
     public User(UserRegisterRequestDTO userDTO){
-        first_name = userDTO.getFirst_name();
-        last_name = userDTO.getLast_name();
-        username = userDTO.getUsername();
-        password = userDTO.getPassword();
-        phone = userDTO.getPhone();
-        email = userDTO.getEmail();
-        created_at = Instant.now();
-        updated_at = Instant.now();
+        this.firstName = userDTO.getFirst_name();
+        this.lastName = userDTO.getLast_name();
+        this.username = userDTO.getUsername();
+        this.password = userDTO.getPassword();
+        this.phone = userDTO.getPhone();
+        this.email = userDTO.getEmail();
+        this.created_at = Instant.now();
+        this.updated_at = Instant.now();
+
     }
 
 }

@@ -11,15 +11,17 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @Component
 public class UserEditDTO {
-    private int id;
+    private long id;
     private String firstName;
     private String lastName;
+    private String password;
     private String phone;
 
     public UserEditDTO(User user) {
         this.id = user.getId();
-        this.firstName = user.getFirst_name();
-        this.lastName = user.getLast_name();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
         this.phone = user.getPhone();
+        this.password = user.getPassword();
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @NoArgsConstructor
 public class UserLoginResponseDTO {
-    private int id;
+    private long id;
     private String username;
     private String loginMsg ;
 

@@ -17,8 +17,8 @@ public class UserGetByIdResponseDTO {
     private String email;
 
     public UserGetByIdResponseDTO(User user) {
-        this.firstName = user.getFirst_name();
-        this.lastName = user.getLast_name();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
         this.username = user.getUsername();
         this.email = user.getEmail();
     }

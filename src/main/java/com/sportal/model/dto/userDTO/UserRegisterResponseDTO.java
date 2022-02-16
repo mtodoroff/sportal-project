@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class UserRegisterResponseDTO {
-    private Integer id;
+    private long id;
     private String username;
     private String email;
 
     public UserRegisterResponseDTO(User user){
-        id = user.getId();
-        username = user.getUsername();
-        email = user.getEmail();
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
     }
 }

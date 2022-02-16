@@ -52,4 +52,11 @@ public class UserController {
         //TODO check if user is logged in
         return new ResponseEntity(userService.editUser(userDTO),HttpStatus.OK);
     }
+
+    @PatchMapping("/users/change-password")
+    public  ResponseEntity<String> changePassword(@RequestBody UserChangePasswordRequest userChangePasswordRequest){
+        //TODO check if user is logged in
+        userService.changePassword(userChangePasswordRequest);
+        return ResponseEntity.ok().body("Password was changed.");
+    }
 }

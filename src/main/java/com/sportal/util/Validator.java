@@ -29,7 +29,7 @@ public class Validator {
         if(password == null || password.isEmpty()){
             throw new BadRequestException("Password cannot be empty");
         }
-        passwordTemplateValidator(password);
+//        passwordTemplateValidator(password);
     }
 
     public static void validateUsername(String username){
