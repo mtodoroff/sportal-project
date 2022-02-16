@@ -107,4 +107,11 @@ public class UserService {
         UserGetByIdResponseDTO userGetByIdResponseDTO = new UserGetByIdResponseDTO(user);
         return userGetByIdResponseDTO;
     }
+
+    public void deleteUser(long id) {
+        if (!userRepository.existsById(id)){
+            throw new BadRequestException("User doesn't exists");
+        }
+        userRepository.deleteById(id);
+    }
 }

@@ -1,12 +1,10 @@
 package com.sportal.controller;
 
 import com.sportal.exceptions.BadRequestException;
-import com.sportal.exceptions.UnauthorizedException;
 import com.sportal.model.pojo.Category;
 import com.sportal.service.CategoryService;
 import org.apache.catalina.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

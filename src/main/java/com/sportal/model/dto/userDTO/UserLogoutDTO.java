@@ -12,6 +12,5 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Component
 public class UserLogoutDTO {
-    private String msg;
-
+    private String message;
 }

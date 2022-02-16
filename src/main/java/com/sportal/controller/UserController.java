@@ -61,6 +61,12 @@ public class UserController {
         return new ResponseEntity<>(new UserLogoutDTO("You have been loged out."), HttpStatus.ACCEPTED);
     }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok().body("\"message\": \"Profile deleted successfully.\"");
+    }
+
     @PutMapping("/users/edit")
     @Validated
     public ResponseEntity<UserEditDTO> editUser(@Valid @RequestBody UserEditDTO userDTO, HttpSession session) {
