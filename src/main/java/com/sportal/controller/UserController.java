@@ -1,8 +1,12 @@
 package com.sportal.controller;
 
 import com.sportal.exceptions.AuthenticationException;
+import com.sportal.exceptions.BadRequestException;
+import com.sportal.exceptions.UnauthorizedException;
 import com.sportal.model.dto.userDTO.*;
+import com.sportal.model.pojo.Category;
 import com.sportal.service.UserService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -22,12 +26,12 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/users")
-    public List<UserGetAllResponseDTO> getAllUsers(){
+    public List<UserGetAllResponseDTO> getAllUsers() {
         //TODO Add right only for admin users
         return userService.getAllUsers();
     }
     @GetMapping("/users/{id}")
-    public UserGetByIdResponseDTO getById(@PathVariable int id){
+    public UserGetByIdResponseDTO getById(@PathVariable int id) {
         return userService.getById(id);
     }
 
@@ -38,23 +42,23 @@ public class UserController {
     }
 
     @PostMapping("/users/login")
-    public ResponseEntity<UserLoginResponseDTO> login(@RequestBody UserLoginRequestDTO userDTO, HttpSession session, HttpServletRequest request){
+    public ResponseEntity<UserLoginResponseDTO> login(@RequestBody UserLoginRequestDTO userDTO, HttpSession session, HttpServletRequest request) {
         //TODO check if session exists
 
         UserLoginResponseDTO user = userService.login(userDTO);
         session.setAttribute(LOGGED_IN, user.getId());
-        session.setMaxInactiveInterval(60*60*3);
-        return new ResponseEntity(user,HttpStatus.OK);
+        session.setMaxInactiveInterval(60 * 60 * 3);
+        return new ResponseEntity(user, HttpStatus.OK);
     }
 
     @PutMapping("/users/edit")
-    public  ResponseEntity<UserEditDTO> editUser(@RequestBody UserEditDTO userDTO,HttpSession session){
+    public ResponseEntity<UserEditDTO> editUser(@RequestBody UserEditDTO userDTO, HttpSession session) {
         //TODO check if user is logged in
-        return new ResponseEntity(userService.editUser(userDTO),HttpStatus.OK);
+        return new ResponseEntity(userService.editUser(userDTO), HttpStatus.OK);
     }
 
     @PatchMapping("/users/change-password")
-    public  ResponseEntity<String> changePassword(@RequestBody UserChangePasswordRequest userChangePasswordRequest){
+    public ResponseEntity<String> changePassword(@RequestBody UserChangePasswordRequest userChangePasswordRequest) {
         //TODO check if user is logged in
         userService.changePassword(userChangePasswordRequest);
         return ResponseEntity.ok().body("Password was changed.");

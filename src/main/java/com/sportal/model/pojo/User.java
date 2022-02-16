@@ -32,8 +32,9 @@ public class User {
     private String password;
     @Column(name = "phone")
     private String phone;
-//    @ManyToOne
-//    private Role role;
+    //@ManyToOne
+    //@JoinColumn("")
+    private Role role;
     @Column(name = "created_at")
     private Instant created_at;
     @Column(name = "updated_at")
