@@ -44,7 +44,6 @@ public class UserController {
     }
 
     @PostMapping("/users/login")
-
     @Validated
     public ResponseEntity<UserLoginResponseDTO> login(@Valid @RequestBody UserLoginRequestDTO userDTO, HttpSession session) {
         if (sessionService.userAlreadyLogged(session)) {
