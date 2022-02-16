@@ -22,7 +22,7 @@ public class CategoryController {
     private static final String LOGGED_IN = "logged_in";
     private CategoryService categoryService;
 
-    @PutMapping("/addcategori")
+    @PutMapping("/addcategory")
     public ResponseEntity<Category> addCategory(@RequestBody User u, String category, HttpSession session, HttpServletRequest request) {
         validateLogin(session, request);
 //        validateAdmin(u);
