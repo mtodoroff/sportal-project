@@ -11,6 +11,7 @@ import com.sportal.util.Validator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -65,6 +66,7 @@ public class UserService {
             user.setFirst_name(userDTO.getFirstName());
             user.setLast_name(userDTO.getLastName());
             user.setPhone(userDTO.getPhone());
+            user.setUpdated_at(Instant.now());
             userRepository.save(user);
             return new UserEditDTO(user);
         } else {

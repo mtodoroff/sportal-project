@@ -1,4 +1,4 @@
-package com.example.sportalproject.model;
+package com.sportal.model.pojo;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Articles {
+public class Article {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +29,8 @@ public class Articles {
     private long views;
     @OneToOne
     @JoinColumn(name="author_id")
-    private Users author_id;
+    private User author_id;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="category_id")
-    private Categories category_id;
+    private Category category_id;
 }
