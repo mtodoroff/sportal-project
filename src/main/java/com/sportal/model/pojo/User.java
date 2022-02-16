@@ -24,7 +24,7 @@ public class User {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(name="username")
+    @Column(name="username",unique = true)
     private String username;
     @Column(name = "email")
     private String email;
@@ -49,7 +49,6 @@ public class User {
         this.email = userDTO.getEmail();
         this.created_at = Instant.now();
         this.updated_at = Instant.now();
-
     }
 
 }

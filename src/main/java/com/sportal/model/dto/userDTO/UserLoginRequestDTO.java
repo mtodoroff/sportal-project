@@ -13,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Component
 public class UserLoginRequestDTO {
+    @NotBlank(message = "Username field is mandatory")
     private String username;
+    @NotBlank(message = "Password field is mandatory")
     private String password;
 }

@@ -6,8 +6,8 @@ import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.userDTO.*;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.sportal.util.Validator;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,17 +23,16 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    ModelMapper modelMapper;
 
     public UserRegisterResponseDTO registerUser(UserRegisterRequestDTO userDTO) {
         if (userRepository.findUserByEmail(userDTO.getEmail()) != null) {
             throw new BadRequestException("Email already exists");
         }
-        Validator.validateUsername(userDTO.getUsername());
         if (userRepository.findUserByUsername(userDTO.getUsername()).isPresent()) {
             throw new BadRequestException("Username already exists");
         }
-        Validator.validatePassword(userDTO.getPassword());
-        Validator.validatePassword(userDTO.getConfirmPassword());
         if (userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
             userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         } else {
@@ -41,12 +40,10 @@ public class UserService {
         }
         User user = new User(userDTO);
         user = userRepository.save(user);
-        UserRegisterResponseDTO responseUserDTO = new UserRegisterResponseDTO(user);
-        return responseUserDTO;
+        return modelMapper.map(user,UserRegisterResponseDTO.class);
     }
 
     public UserLoginResponseDTO login(UserLoginRequestDTO userDTO) {
-        Validator.validateUsername(userDTO.getUsername());
         Optional<User> userOpt = userRepository.findUserByUsername(userDTO.getUsername());
         if (userOpt.isPresent()) {
             User user = userOpt.get();
@@ -61,16 +58,21 @@ public class UserService {
     }
 
     @Transactional
-    public UserEditDTO editUser(UserEditDTO userDTO) {
-        Optional<User> u = userRepository.findById(userDTO.getId());
+    public UserEditDTO editUser(UserEditDTO userEditDTO) {
+        Optional<User> u = userRepository.findById(userEditDTO.getId());
         if (u.isPresent()) {
             User user = u.get();
-            user.setFirstName(userDTO.getFirstName());
-            user.setLastName(userDTO.getLastName());
-            user.setPhone(userDTO.getPhone());
+            user.setFirstName(userEditDTO.getFirstName());
+            user.setLastName(userEditDTO.getLastName());
+            user.setPhone(userEditDTO.getPhone());
+            user.setUsername(userEditDTO.getUsername());
+            //TODO all method works but return status 500, should return
+            if (userRepository.findUserByUsername(userEditDTO.getUsername()).isEmpty()) {
+                throw new BadRequestException("Username already exists");
+            }
             user.setUpdated_at(Instant.now());
             userRepository.save(user);
-            return new UserEditDTO(user);
+            return modelMapper.map(user,UserEditDTO.class);
         } else {
             throw new NotFoundException("User not found");
         }
@@ -78,9 +80,6 @@ public class UserService {
 
     @Transactional
     public void changePassword(UserChangePasswordRequest userChangePasswordRequest) {
-        if (!userChangePasswordRequest.getNewPassword().equals(userChangePasswordRequest.getConfirmNewPassword())) {
-            throw new BadRequestException("Passwords do not match.");
-        }
         Optional<User> u = userRepository.findById(userChangePasswordRequest.getId());
         User user = u.get();
         String oldPassword = user.getPassword();

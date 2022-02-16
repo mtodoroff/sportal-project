@@ -18,4 +18,7 @@ public class SportalApplication {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public ModelMapper modelMapper(){return  new ModelMapper();}
 }
