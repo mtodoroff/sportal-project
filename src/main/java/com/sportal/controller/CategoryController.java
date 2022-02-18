@@ -1,14 +1,14 @@
 package com.sportal.controller;
-
-import com.sportal.exceptions.BadRequestException;
 import com.sportal.model.pojo.Category;
+import com.sportal.model.repository.UserRepository;
 import com.sportal.service.CategoryService;
-import org.apache.catalina.User;
+import com.sportal.service.SessionService;
+import com.sportal.model.pojo.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -16,28 +16,20 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 public class CategoryController {
-    private static final String LOGGED_FROM = "logged_from";
-    private static final String LOGGED_IN = "logged_in";
-    private CategoryService categoryService;
 
-    @PutMapping("/addcategory")
-    public ResponseEntity<Category> addCategory(@RequestBody User u, String category, HttpSession session, HttpServletRequest request) {
-        validateLogin(session, request);
-//        validateAdmin(u);
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    private SessionService sessionService;
+
+    @PutMapping("/add/category")
+    public ResponseEntity<Category> addCategory(@RequestBody  Category category, HttpSession session, HttpServletRequest request) {
+        sessionService.validateLogin(session,request);
+        User u=userRepository.findUserById((Long) session.getAttribute(SessionService.USER_ID));
+        sessionService.validateAdmin(u);
         Category c=categoryService.createCategory(category);
         return ResponseEntity.ok(c);
     }
-    private void validateLogin(HttpSession session, HttpServletRequest request) {
-        if (session.isNew() || !(Boolean) session.getAttribute(LOGGED_IN)
-                || (!request.getRemoteHost().equals(session.getAttribute(LOGGED_FROM)))) {
-            throw new BadRequestException("You are not registered");
-        }
-    }
-    //TODO validate admin
-//    private void validateAdmin(User u){
-//        if(!u.getRoles().getType().toUpperCase().equals("Admin")){
-//            throw new UnauthorizedException("You are not admin");
-//        }
-//    }
-
 }

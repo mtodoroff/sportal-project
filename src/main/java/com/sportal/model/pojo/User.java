@@ -32,9 +32,9 @@ public class User {
     private String password;
     @Column(name = "phone")
     private String phone;
-    //@ManyToOne
-    //@JoinColumn("")
-//    private Role role;
+    @ManyToOne
+    @JoinColumn(name="user_type")
+    private Role role;
     @Column(name = "created_at")
     private Instant created_at;
     @Column(name = "updated_at")
@@ -51,5 +51,4 @@ public class User {
         this.created_at = Instant.now();
         this.updated_at = Instant.now();
     }
-
 }

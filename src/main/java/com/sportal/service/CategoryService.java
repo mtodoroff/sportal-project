@@ -10,9 +10,10 @@ public class CategoryService {
     @Autowired
     CategoryRepository categoryRepository;
 
-    public Category createCategory(String category){
+    public Category createCategory(Category category){
         Category cat=new Category();
-        cat.setCategory(category);
+        cat.setCategory(category.getCategory());
+        categoryRepository.save(cat);
         return cat;
     }
 
