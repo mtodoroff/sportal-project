@@ -1,10 +1,9 @@
-package com.sportal.model.dto.categoryDTO;
+package com.sportal.model.dto.categoryDTOs;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
 @Getter
 @Setter
 @NoArgsConstructor

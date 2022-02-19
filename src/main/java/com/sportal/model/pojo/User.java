@@ -1,14 +1,14 @@
 package com.sportal.model.pojo;
 
-import com.sportal.model.pojo.enums.RoleName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import com.sportal.model.dto.userDTO.UserRegisterRequestDTO;
+import com.sportal.model.dto.userDTOs.UserRegisterRequestDTO;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -33,9 +33,9 @@ public class User {
     private String password;
     @Column(name = "phone")
     private String phone;
-    @ManyToOne
-    @JoinColumn(name="user_type")
-    private Role role;
+//    @ManyToOne
+//    @JoinColumn(name="user_type")
+//    private Role role;
     @Column(name = "created_at")
     private Instant created_at;
     @Column(name = "updated_at")
@@ -43,6 +43,8 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Article>articles;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     //TODO add Role enums
     public User(UserRegisterRequestDTO userDTO){

@@ -1,6 +1,5 @@
-package com.sportal.model.dto.userDTO;
+package com.sportal.model.dto.userDTOs;
 
-import com.sportal.model.pojo.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

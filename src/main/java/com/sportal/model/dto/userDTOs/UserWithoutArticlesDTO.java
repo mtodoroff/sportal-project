@@ -1,11 +1,10 @@
-package com.sportal.model.dto.userDTO;
+package com.sportal.model.dto.userDTOs;
 
 import com.sportal.model.pojo.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.time.Instant;
 @Getter
 @Setter

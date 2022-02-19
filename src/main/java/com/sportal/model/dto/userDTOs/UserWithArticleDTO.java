@@ -1,13 +1,12 @@
-package com.sportal.model.dto.userDTO;
+package com.sportal.model.dto.userDTOs;
 
-import com.sportal.model.dto.article.ArticleWithoutUserDTO;
+import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
 import com.sportal.model.pojo.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Set;
 
 @Getter

@@ -1,8 +1,7 @@
-package com.sportal.model.dto.article;
+package com.sportal.model.dto.articleDTOs;
 
-import com.sportal.model.dto.categoryDTO.CategoryWithoutArticleDTO;
-import com.sportal.model.dto.userDTO.UserWithoutArticlesDTO;
-import com.sportal.model.pojo.Category;
+import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
+import com.sportal.model.dto.userDTOs.UserWithoutArticlesDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

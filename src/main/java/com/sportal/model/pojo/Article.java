@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Table(name="articles")
 @Entity
 @Getter
@@ -32,4 +34,7 @@ public class Article {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="category_id")
     private Category category_id;
+    @OneToMany(mappedBy = "article",cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
 }
