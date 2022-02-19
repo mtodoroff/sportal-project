@@ -36,20 +36,7 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
         errorDTO.setDateTime(LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorDTO> handleMethodArgumentNotValid(MethodArgumentNotValidException e){
-        ErrorDTO errorDTO = new ErrorDTO();
-        errorDTO.setStatus(HttpStatus.BAD_REQUEST);
-
-        List<String> errorMessages = e.getFieldErrors()
-                .stream().map(DefaultMessageSourceResolvable::getDefaultMessage)
-                .collect(Collectors.toList());
-
-        errorDTO.setMsg(String.join("; ", errorMessages));
-        errorDTO.setDateTime(LocalDateTime.now());
-        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
-    }
+    
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorDTO> handleNotFound(Exception e){
