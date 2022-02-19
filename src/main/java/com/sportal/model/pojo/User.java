@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Set;
 
 @NoArgsConstructor
 @Setter
@@ -39,6 +40,9 @@ public class User {
     private Instant created_at;
     @Column(name = "updated_at")
     private Instant updated_at;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Article>articles;
 
     //TODO add Role enums
     public User(UserRegisterRequestDTO userDTO){

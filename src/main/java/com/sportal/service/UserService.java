@@ -3,7 +3,9 @@ package com.sportal.service;
 import com.sportal.exceptions.AuthenticationException;
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundException;
+import com.sportal.model.dto.article.ArticleWithoutUserDTO;
 import com.sportal.model.dto.userDTO.*;
+import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Category;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.UserRepository;
@@ -14,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -102,10 +102,17 @@ public class UserService {
         return userGetAllResponseDTOS;
     }
 
-    public UserGetByIdResponseDTO getById(long id) {
+    public UserWithArticleDTO getById(long id) {
         User user = userRepository.getById(id);
-        UserGetByIdResponseDTO userGetByIdResponseDTO = new UserGetByIdResponseDTO(user);
-        return userGetByIdResponseDTO;
+        UserWithArticleDTO dto = modelMapper.map(user, UserWithArticleDTO.class);
+        Set<Article> article = user.getArticles();
+        Set<ArticleWithoutUserDTO> currentDTO = new HashSet<>();
+
+        for (Article a : article) {
+            currentDTO.add(modelMapper.map(a, ArticleWithoutUserDTO.class));
+        }
+        dto.setArticle(currentDTO);
+        return dto;
     }
 
     public void deleteUser(long id) {
