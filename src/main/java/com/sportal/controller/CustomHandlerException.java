@@ -36,7 +36,7 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
         errorDTO.setDateTime(LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
     }
-    
+
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorDTO> handleNotFound(Exception e){
