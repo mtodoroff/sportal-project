@@ -1,7 +1,7 @@
 package com.sportal.controller;
 
 import com.sportal.exceptions.BadRequestException;
-import com.sportal.model.dto.userDTO.*;
+import com.sportal.model.dto.userDTOs.*;
 import com.sportal.service.SessionService;
 
 import com.sportal.service.UserService;
