@@ -1,7 +1,11 @@
 package com.sportal.controller;
 
+<<<<<<< HEAD
+import com.sportal.exceptions.InvalidArticle;
+=======
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundException;
+>>>>>>> 6dc8bc6423489a18bc3ed37acd7250db4cb6ce2c
 import com.sportal.exceptions.UnauthorizedException;
 import com.sportal.model.dto.ErrorDTO;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -56,5 +60,14 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
         e.printStackTrace();
         errorDTO.setDateTime(LocalDateTime.now());
         return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @ExceptionHandler(value = {InvalidArticle.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorDTO errorInvalidArticle(Exception e) {
+        ErrorDTO dto = new ErrorDTO();
+        dto.setMsg(e.getMessage());
+        dto.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        return dto;
     }
 }

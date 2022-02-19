@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name="categories")
@@ -18,4 +19,6 @@ public class Category {
     private long id;
     @Column
     private String category;
+    @OneToMany(mappedBy = "id")
+    private Set<Article> articles;
 }

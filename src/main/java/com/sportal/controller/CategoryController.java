@@ -39,6 +39,7 @@ public class CategoryController {
     public List<Category> getAllCategory(){
         return categoryRepository.findAll();
     }
+
     @DeleteMapping("/delete/category/{id}")
     public ResponseEntity<Category> deleteById(@PathVariable long id,HttpSession session,HttpServletRequest request){
         validateLoginAndAdmin(session, request);
@@ -50,7 +51,6 @@ public class CategoryController {
         categoryRepository.deleteById(id);
         return ResponseEntity.ok(category);
     }
-
     @PutMapping("/edit/category")
     public ResponseEntity<Category> edit(@RequestBody Category category,HttpSession session,HttpServletRequest request){
         validateLoginAndAdmin(session, request);
@@ -79,4 +79,5 @@ public class CategoryController {
         User u = userRepository.findUserById((Long) session.getAttribute(SessionService.USER_ID));
         sessionService.validateAdmin(u);
     }
+
 }
