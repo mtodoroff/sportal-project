@@ -42,11 +42,22 @@ public class SessionService {
             throw new UnauthorizedException("You have to login!");
         }
     }
+
+    public User getLoggedUser(HttpSession session){
+        if(session.getAttribute(USER_ID) == null){
+            throw new AuthenticationException("You have to log in!");
+        }
+        else{
+            long userId = (long) session.getAttribute(USER_ID);
+            return userRepository.findById(userId).get();
+        }
+    }
+
     public void validateAdmin(User u){
         Optional<User> opt=userRepository.findUserByUsername(u.getUsername());
         User user=opt.get();
-        if(!user.getRole().getRoleName().equals(RoleName.ADMIN)){
-            throw new UnauthorizedException("You are not admin");
-        }
+//        if(!user.getRole().getRoleName().equals(RoleName.ADMIN)){
+//            throw new UnauthorizedException("You are not admin");
+//        }
     }
 }

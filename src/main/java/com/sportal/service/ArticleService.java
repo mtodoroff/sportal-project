@@ -3,20 +3,18 @@ package com.sportal.service;
 import com.sportal.exceptions.InvalidArticle;
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.exceptions.UnauthorizedException;
-import com.sportal.model.dto.article.AddArticleDTO;
-import com.sportal.model.dto.article.ArticleWithOwnerDTO;
-import com.sportal.model.dto.categoryDTO.CategoryWithoutArticleDTO;
-import com.sportal.model.dto.userDTO.UserWithoutArticlesDTO;
+import com.sportal.model.dto.articleDTOs.AddArticleDTO;
+import com.sportal.model.dto.articleDTOs.ArticleWithOwnerDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
+import com.sportal.model.dto.userDTOs.UserWithoutArticlesDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.ArticleRepository;
 import com.sportal.model.repository.UserRepository;
-import org.apache.catalina.mapper.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
 @Service
