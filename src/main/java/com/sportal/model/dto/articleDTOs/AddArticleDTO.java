@@ -11,11 +11,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class AddArticleDTO {
 
-    @Column
+
     private String title;
-    @Column
+
     private String content;
-    @Column
+
     private String category;
 
 }

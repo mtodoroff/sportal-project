@@ -1,6 +1,7 @@
 package com.sportal.model.dto.articleDTOs;
 
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
+import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,4 +26,13 @@ public class ArticleWithoutUserDTO {
     private long views;
 
     private CategoryWithoutArticleDTO category;
+
+    public ArticleWithoutUserDTO(Article article) {
+        this.id = article.getId();
+        this.title = article.getTitle();
+        this.content = article.getContent();
+        this.created_at = article.getCreated_at();
+        this.updated_at = article.getUpdated_at();
+        this.views = article.getViews();
+    }
 }
