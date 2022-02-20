@@ -1,10 +1,7 @@
 package com.sportal.controller;
 
-import com.sportal.exceptions.InvalidArticle;
+import com.sportal.exceptions.*;
 
-import com.sportal.exceptions.BadRequestException;
-import com.sportal.exceptions.NotFoundException;
-import com.sportal.exceptions.UnauthorizedException;
 import com.sportal.model.dto.ErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +15,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class CustomHandlerException extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UnauthorizedException.class)
+    @ExceptionHandler({UnauthorizedException.class,AuthenticationException.class})
     public ResponseEntity<ErrorDTO> handleUnauthorized(Exception e){
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setStatus(HttpStatus.UNAUTHORIZED);
