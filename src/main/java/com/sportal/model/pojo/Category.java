@@ -18,4 +18,8 @@ public class Category extends BasePojo {
     private String category;
     @OneToMany(mappedBy = "id")
     private Set<Article> articles;
+
+    public Category(String category) {
+        this.category = category;
+    }
 }

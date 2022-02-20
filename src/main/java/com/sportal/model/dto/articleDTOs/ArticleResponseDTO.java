@@ -16,14 +16,14 @@ import java.util.List;
 public class ArticleResponseDTO {
     private long id;
     private String title;
-    private String text;
+    private String content;
     private long views;
     private List<CommentResponseDTO> comments;
 
     public ArticleResponseDTO(Article article){
         this.id = article.getId();
         this.title = article.getTitle();
-        this.text = article.getContent();
+        this.content = article.getContent();
         this.views = article.getViews();
         this.comments = new ArrayList<>();
     }

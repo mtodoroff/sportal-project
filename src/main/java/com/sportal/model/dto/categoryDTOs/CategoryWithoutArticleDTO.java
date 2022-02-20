@@ -1,5 +1,6 @@
 package com.sportal.model.dto.categoryDTOs;
 
+import com.sportal.model.pojo.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,4 +16,8 @@ public class CategoryWithoutArticleDTO {
 
     private String category;
 
+     public CategoryWithoutArticleDTO(Category category){
+      this.id=category.getId();
+      this.category=category.getCategory();
+     }
 }

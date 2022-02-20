@@ -1,11 +1,13 @@
 package com.sportal.controller;
 
 import com.sportal.model.dto.articleDTOs.AddArticleDTO;
+import com.sportal.model.dto.articleDTOs.ArticleResponseDTO;
 import com.sportal.model.dto.articleDTOs.ArticleWithOwnerDTO;
 import com.sportal.model.pojo.User;
 import com.sportal.service.ArticleService;
 import com.sportal.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -19,13 +21,12 @@ public class ArticleController {
     SessionService sessionService;
 
     @PostMapping("/articles")
-        public ArticleWithOwnerDTO add(@RequestBody AddArticleDTO article, HttpSession session) {
-          return articleService.addArticle(article,(Long)session.getAttribute(SessionService.USER_ID));
-
+        public ResponseEntity<ArticleResponseDTO> add(@RequestBody AddArticleDTO article, HttpSession session) {
+          return ResponseEntity.ok(articleService.addArticle(article,(Long)session.getAttribute(SessionService.USER_ID)));
     }
-    @GetMapping("articles/{id}")
-    public ArticleWithOwnerDTO getByid(@PathVariable long id){
-        return articleService.getByid(id);
+    @GetMapping("articles/{title}")
+    public ArticleWithOwnerDTO getByTitle(@PathVariable String title){
+        return articleService.getByTitle(title);
     }
 
     @PostMapping("/articles/{id}/like")

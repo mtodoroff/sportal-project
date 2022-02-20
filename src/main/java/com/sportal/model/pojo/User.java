@@ -32,6 +32,8 @@ public class User extends BasePojo{
     private String password;
     @Column(name = "phone")
     private String phone;
+
+    @Column(name="is_admin")
     private boolean is_admin;
     @Column(name = "created_at")
     private LocalDateTime created_at;

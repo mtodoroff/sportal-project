@@ -1,5 +1,7 @@
 package com.sportal.model.pojo;
 
+import com.sportal.model.dto.articleDTOs.AddArticleDTO;
+import com.sportal.model.dto.userDTOs.UserWithoutArticlesDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -48,5 +50,15 @@ public class Article extends BasePojo{
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> dislikedArticles;
+    public Article(AddArticleDTO article, User user){
+
+        this.title= article.getTitle();
+        this.content= article.getContent();
+        this.created_at=LocalDateTime.now();
+        this.updated_at=LocalDateTime.now();
+        this.views=0;
+        this.user=user;
+
+    }
 
 }
