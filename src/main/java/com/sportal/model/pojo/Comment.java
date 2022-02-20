@@ -16,10 +16,8 @@ import java.util.Set;
 @Entity
 @Table(name = "comments")
 @Component
-public class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Comment extends BasePojo{
+
     @Column(name = "comment_text")
     private String commentText;
 

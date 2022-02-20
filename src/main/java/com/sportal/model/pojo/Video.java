@@ -11,10 +11,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Video {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class Video extends BasePojo{
+
     @Column
     private String url;
     @OneToOne(cascade = CascadeType.ALL)

@@ -17,10 +17,8 @@ import java.util.Set;
 @Entity
 @Table(name="users")
 @Component
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class User extends BasePojo{
+
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")

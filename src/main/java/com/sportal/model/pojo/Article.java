@@ -13,11 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Article {
+public class Article extends BasePojo{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     @Column
     private String title;
     @Column
