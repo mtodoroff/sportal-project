@@ -33,9 +33,7 @@ public class User {
     private String password;
     @Column(name = "phone")
     private String phone;
-//    @ManyToOne
-//    @JoinColumn(name="user_type")
-//    private Role role;
+    private boolean is_admin;
     @Column(name = "created_at")
     private Instant created_at;
     @Column(name = "updated_at")
@@ -44,20 +42,24 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Article>articles;
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+
     private List<Comment> comments;
 
     @ManyToMany(mappedBy = "likers",cascade = CascadeType.ALL)
+
     private Set<Comment> likedComments;
     @ManyToMany(mappedBy = "dislikers",cascade = CascadeType.ALL)
+
     private Set<Comment> dislikedComments;
 
 
-    //TODO add Role enums
+
     public User(UserRegisterRequestDTO userDTO){
         this.firstName = userDTO.getFirst_name();
         this.lastName = userDTO.getLast_name();
         this.username = userDTO.getUsername();
         this.password = userDTO.getPassword();
+        this.is_admin = userDTO.is_admin();
         this.phone = userDTO.getPhone();
         this.email = userDTO.getEmail();
         this.created_at = Instant.now();

@@ -38,6 +38,7 @@ public class UserService {
         } else {
             throw new BadRequestException("The passwords do not match!");
         }
+        userDTO.set_admin(false);
         User user = new User(userDTO);
         user = userRepository.save(user);
         return modelMapper.map(user,UserRegisterResponseDTO.class);

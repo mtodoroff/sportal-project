@@ -22,7 +22,7 @@ public class ArticleController {
           return articleService.addArticle(article,(Long)session.getAttribute(SessionService.USER_ID));
 
     }
-    @GetMapping("article/{id}")
+    @GetMapping("articles/{id}")
     public ArticleWithOwnerDTO getByid(@PathVariable long id){
         return articleService.getByid(id);
     }

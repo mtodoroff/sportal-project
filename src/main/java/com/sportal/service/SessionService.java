@@ -56,8 +56,8 @@ public class SessionService {
     public void validateAdmin(User u){
         Optional<User> opt=userRepository.findUserByUsername(u.getUsername());
         User user=opt.get();
-//        if(!user.getRole().getRoleName().equals(RoleName.ADMIN)){
-//            throw new UnauthorizedException("You are not admin");
-//        }
+        if(!user.is_admin()){
+            throw new UnauthorizedException("You are not admin!");
+        }
     }
 }
