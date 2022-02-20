@@ -1,12 +1,10 @@
 package com.sportal.model.dto.userDTOs;
 
-import com.sportal.model.pojo.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Component;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;

@@ -1,6 +1,5 @@
 package com.sportal.model.pojo;
 
-import com.sportal.model.pojo.enums.RoleName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
