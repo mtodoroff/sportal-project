@@ -4,8 +4,10 @@ import com.sportal.exceptions.AuthenticationException;
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.dto.userDTOs.*;
 import com.sportal.model.pojo.Article;
+import com.sportal.model.pojo.Category;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -106,9 +108,12 @@ public class UserService {
         UserWithArticleDTO dto = modelMapper.map(user, UserWithArticleDTO.class);
         Set<Article> article = user.getArticles();
         Set<ArticleWithoutUserDTO> currentDTO = new HashSet<>();
-
         for (Article a : article) {
-            currentDTO.add(modelMapper.map(a, ArticleWithoutUserDTO.class));
+           ArticleWithoutUserDTO art=(modelMapper.map(a, ArticleWithoutUserDTO.class));
+            Category cat=a.getCategory_id();
+            CategoryWithoutArticleDTO categoryWithoutArticleDTO=new CategoryWithoutArticleDTO(cat);
+            art.setCategory(categoryWithoutArticleDTO);
+            currentDTO.add(art);
         }
         dto.setArticle(currentDTO);
         return dto;

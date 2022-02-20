@@ -7,7 +7,6 @@ import com.sportal.service.CategoryService;
 import com.sportal.service.SessionService;
 import com.sportal.model.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

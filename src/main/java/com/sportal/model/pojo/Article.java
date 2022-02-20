@@ -1,5 +1,7 @@
 package com.sportal.model.pojo;
 
+import com.sportal.model.dto.articleDTOs.AddArticleDTO;
+import com.sportal.model.dto.userDTOs.UserWithoutArticlesDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,4 +39,15 @@ public class Article {
     @OneToMany(mappedBy = "article",cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+
+    public Article(AddArticleDTO article, User user){
+
+        this.title= article.getTitle();
+        this.content= article.getContent();
+        this.created_at=LocalDateTime.now();
+        this.updated_at=LocalDateTime.now();
+        this.views=0;
+        this.user=user;
+
+    }
 }

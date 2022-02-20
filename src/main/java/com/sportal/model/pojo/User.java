@@ -33,9 +33,8 @@ public class User {
     private String password;
     @Column(name = "phone")
     private String phone;
-//    @ManyToOne
-//    @JoinColumn(name="user_type")
-//    private Role role;
+    @Column(name="is_admin")
+    private boolean role;
     @Column(name = "created_at")
     private Instant created_at;
     @Column(name = "updated_at")

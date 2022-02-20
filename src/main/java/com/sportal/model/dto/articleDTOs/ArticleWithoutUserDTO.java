@@ -1,5 +1,6 @@
 package com.sportal.model.dto.articleDTOs;
 
+import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.pojo.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +24,5 @@ public class ArticleWithoutUserDTO {
 
     private long views;
 
-    private Category category_id;
+    private CategoryWithoutArticleDTO category;
 }
