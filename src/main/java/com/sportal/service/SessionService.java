@@ -19,6 +19,7 @@ public class SessionService {
     @Autowired
     private UserRepository userRepository;
 
+    // TODO Some methods cover another . It might be ambigious REFACTOR!!!
     public void loginUser(HttpSession session, long id,HttpServletRequest request) {
         session.setAttribute(LOGGED, true);
         session.setAttribute(LOGGED_FROM,request.getRemoteAddr());

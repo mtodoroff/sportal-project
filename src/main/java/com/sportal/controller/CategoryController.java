@@ -36,7 +36,7 @@ public class CategoryController {
         Category c = categoryService.createCategory(category);
         return ResponseEntity.ok(c);
     }
-
+    //TODO Remove circular JSON
     @GetMapping("/categories")
     public List<Category> getAllCategory() {
         return categoryRepository.findAll();
