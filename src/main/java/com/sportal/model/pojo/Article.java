@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Table(name="articles")
 @Entity
@@ -33,5 +34,19 @@ public class Article extends BasePojo{
     private Category category_id;
     @OneToMany(mappedBy = "article",cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_like_articles",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> likedArticles;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_dislike_articles",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> dislikedArticles;
 
 }

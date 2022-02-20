@@ -76,15 +76,15 @@ public class CommentService {
     public int dislikeComment(long commentId, long userId) {
         Comment comment = getCommentById(commentId);
         User user = getUserById(userId);
-        if(!user.getLikedComments().contains(comment)){
-            throw new BadRequestException("You have to like the post in order to unlike it!");
+        if(user.getDislikedComments().contains(comment)){
+            throw new BadRequestException("User already disliked this comment!");
         }
-        comment.getLikers().remove(user);
+        comment.getDislikers().add(user);
         if (comment.getLikers().contains(user)){
             comment.getLikers().remove(user);
         }
         commentRepository.save(comment);
-        return comment.getLikers().size();
+        return comment.getDislikers().size();
     }
 
     private Comment getCommentById(long id){

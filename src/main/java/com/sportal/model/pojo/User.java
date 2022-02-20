@@ -39,18 +39,21 @@ public class User extends BasePojo{
 
     @OneToMany(mappedBy = "user")
     private Set<Article>articles;
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     @ManyToMany(mappedBy = "likers",cascade = CascadeType.ALL)
-
     private Set<Comment> likedComments;
-    @ManyToMany(mappedBy = "dislikers",cascade = CascadeType.ALL)
 
+    @ManyToMany(mappedBy = "dislikers",cascade = CascadeType.ALL)
     private Set<Comment> dislikedComments;
 
+    @ManyToMany(mappedBy = "likedArticles")
+    private Set<Article> likedArticles;
 
+    @ManyToMany(mappedBy = "dislikedArticles")
+    private Set<Article> dislikedArticles;
 
     public User(UserRegisterRequestDTO userDTO){
         this.firstName = userDTO.getFirst_name();
