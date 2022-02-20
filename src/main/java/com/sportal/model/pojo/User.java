@@ -46,6 +46,12 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @ManyToMany(mappedBy = "likers",cascade = CascadeType.ALL)
+    private Set<Comment> likedComments;
+    @ManyToMany(mappedBy = "dislikers",cascade = CascadeType.ALL)
+    private Set<Comment> dislikedComments;
+
+
     //TODO add Role enums
     public User(UserRegisterRequestDTO userDTO){
         this.firstName = userDTO.getFirst_name();

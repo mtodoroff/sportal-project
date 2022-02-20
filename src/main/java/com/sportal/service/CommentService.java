@@ -29,24 +29,24 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     public ArticleResponseDTO addComment(User user, CommentAddRequestDTO addedComment){
-        Article article = articleRepository.findById(addedComment.getArticleId()).orElseThrow(()-> new NotFoundException("Article not found!"));
+        Article article = getArticleById(addedComment.getArticleId());
         Comment comment = new Comment(addedComment.getComment_text(),article,user);
         commentRepository.save(comment);
         return new ArticleResponseDTO(article);
     }
 
     public boolean userOwnsComment(long userId, long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new NotFoundException("Comment not found!"));
+        Comment comment = getCommentById(commentId);
         return comment.getUser().getId() == userId;
     }
-    //Todo extract line 42,37,50 in method
+
     public void deleteComment(long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new NotFoundException("Comment not found!"));
+        Comment comment = getCommentById(commentId);
         commentRepository.delete(comment);
     }
 
     public ArticleResponseDTO editComment(CommentEditRequestDTO editedComment) {
-        Comment comment = commentRepository.findById(editedComment.getId()).orElseThrow(()-> new NotFoundException("Comment not found!"));
+        Comment comment = getCommentById(editedComment.getId());
         String text = editedComment.getComment_text();
         if (text.isEmpty()){
             throw new BadRequestException("Text cannot be empty!");
@@ -55,8 +55,47 @@ public class CommentService {
         comment.setUpdated_at(Instant.now());
         commentRepository.save(comment);
         long articleId =  comment.getArticle().getId();
-        Article article = articleRepository.findById(articleId).orElseThrow( ()-> new NotFoundException("Article not found!"));
+        Article article = getArticleById(articleId);
         return new ArticleResponseDTO(article);
     }
 
+    public int likeComment(long commentId, long userId) {
+        Comment comment = getCommentById(commentId);
+        User user = getUserById(userId);
+        if(user.getLikedComments().contains(comment)){
+            throw new BadRequestException("User already liked this comment!");
+        }
+        comment.getLikers().add(user);
+        if (comment.getDislikers().contains(user)){
+            comment.getDislikers().remove(user);
+        }
+        commentRepository.save(comment);
+        return comment.getLikers().size();
+    }
+
+    public int dislikeComment(long commentId, long userId) {
+        Comment comment = getCommentById(commentId);
+        User user = getUserById(userId);
+        if(!user.getLikedComments().contains(comment)){
+            throw new BadRequestException("You have to like the post in order to unlike it!");
+        }
+        comment.getLikers().remove(user);
+        if (comment.getLikers().contains(user)){
+            comment.getLikers().remove(user);
+        }
+        commentRepository.save(comment);
+        return comment.getLikers().size();
+    }
+
+    private Comment getCommentById(long id){
+        return commentRepository.findById(id).orElseThrow(()-> new NotFoundException("Comment not found!"));
+    }
+
+    private User getUserById(long id){
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private Article getArticleById(long id){
+        return articleRepository.findById(id).orElseThrow( ()-> new NotFoundException("Article not found!"));
+    }
 }

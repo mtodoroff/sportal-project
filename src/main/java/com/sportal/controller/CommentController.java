@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -20,11 +21,11 @@ public class CommentController {
     @Autowired
     private SessionService sessionService;
 
-//    @PostMapping("/comments")
-//    public ArticleResponseDTO addComment(HttpSession session,@RequestBody CommentAddRequestDTO comment){
-//        User loggedUser = sessionService.getLoggedUser(session);
-//        return commentService.addComment(loggedUser,comment);
-//    }
+    @PostMapping("/comments")
+    public ArticleResponseDTO addComment(HttpSession session,@RequestBody CommentAddRequestDTO comment){
+        User loggedUser = sessionService.getLoggedUser(session);
+        return commentService.addComment(loggedUser,comment);
+    }
 
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<String> deleteComment(@PathVariable long id){
@@ -43,6 +44,16 @@ public class CommentController {
         }
     }
 
+    @PostMapping("/comments/{id}/like")
+    public int likePost(@PathVariable long id, HttpSession session){
+        User loggedUser = sessionService.getLoggedUser(session);
+        return commentService.likeComment(id,loggedUser.getId());
+    }
 
+    @PostMapping("/comments/{id}/dislike")
+    public int unlikePost(@PathVariable long id, HttpSession session){
+        User loggedUser = sessionService.getLoggedUser(session);
+        return commentService.dislikeComment(id,loggedUser.getId());
+    }
 
 }
