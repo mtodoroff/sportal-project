@@ -26,13 +26,14 @@ public class UserController {
 
 
     @GetMapping("/users")
-    public List<UserGetAllResponseDTO> getAllUsers() {
-        //TODO Add right only for admin users
+    public List<UserGetAllResponseDTO> getAllUsers(HttpSession session, HttpServletRequest request) {
+        sessionService.validateLoginAndAdmin(session,request);
         return userService.getAllUsers();
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserWithArticleDTO> getById(@PathVariable int id) {
+    public ResponseEntity<UserWithArticleDTO> getById(@PathVariable int id,HttpSession session, HttpServletRequest request) {
+        sessionService.validateLoginAndAdmin(session,request);
         return ResponseEntity.ok(userService.getById(id));
     }
 

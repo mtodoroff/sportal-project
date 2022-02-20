@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -71,7 +72,7 @@ public class UserService {
             if (userRepository.findUserByUsername(userEditDTO.getUsername()).isEmpty()) {
                 throw new BadRequestException("Username already exists");
             }
-            user.setUpdated_at(Instant.now());
+            user.setUpdated_at(LocalDateTime.now());
             userRepository.save(user);
             return modelMapper.map(user,UserEditDTO.class);
         } else {
@@ -89,7 +90,7 @@ public class UserService {
             throw new BadRequestException("New password must be different from the old.");
         }
         user.setPassword(passwordEncoder.encode(newPassword));
-        user.setUpdated_at(Instant.now());
+        user.setUpdated_at(LocalDateTime.now());
         userRepository.save(user);
     }
 

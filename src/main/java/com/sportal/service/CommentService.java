@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 
 @Service
@@ -52,7 +53,7 @@ public class CommentService {
             throw new BadRequestException("Text cannot be empty!");
         }
         comment.setCommentText(editedComment.getComment_text());
-        comment.setUpdated_at(Instant.now());
+        comment.setUpdated_at(LocalDateTime.now());
         commentRepository.save(comment);
         long articleId =  comment.getArticle().getId();
         Article article = getArticleById(articleId);

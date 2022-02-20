@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -33,9 +34,9 @@ public class User extends BasePojo{
     private String phone;
     private boolean is_admin;
     @Column(name = "created_at")
-    private Instant created_at;
+    private LocalDateTime created_at;
     @Column(name = "updated_at")
-    private Instant updated_at;
+    private LocalDateTime updated_at;
 
     @OneToMany(mappedBy = "user")
     private Set<Article>articles;
@@ -63,7 +64,7 @@ public class User extends BasePojo{
         this.is_admin = userDTO.is_admin();
         this.phone = userDTO.getPhone();
         this.email = userDTO.getEmail();
-        this.created_at = Instant.now();
-        this.updated_at = Instant.now();
+        this.created_at = LocalDateTime.now();
+        this.updated_at = LocalDateTime.now();
     }
 }
