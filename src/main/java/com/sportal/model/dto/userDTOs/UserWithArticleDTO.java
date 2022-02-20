@@ -1,7 +1,7 @@
 package com.sportal.model.dto.userDTOs;
 
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
-import com.sportal.model.pojo.Role;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +20,6 @@ public class UserWithArticleDTO {
     private String lastName;
 
     private String username;
-
-    private Role role;
 
     private Instant created_at;
 

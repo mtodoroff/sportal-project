@@ -9,17 +9,15 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Table(name="articles")
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Article {
+public class Article extends BasePojo{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     @Column
     private String title;
     @Column
@@ -39,7 +37,19 @@ public class Article {
     @OneToMany(mappedBy = "article",cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_like_articles",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> likedArticles;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_dislike_articles",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> dislikedArticles;
     public Article(AddArticleDTO article, User user){
 
         this.title= article.getTitle();
@@ -50,4 +60,5 @@ public class Article {
         this.user=user;
 
     }
+
 }

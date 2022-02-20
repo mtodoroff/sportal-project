@@ -11,11 +11,9 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Picture {
+public class Picture extends BasePojo{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+
     @Column
     private String url;
     @OneToOne(cascade = CascadeType.ALL)

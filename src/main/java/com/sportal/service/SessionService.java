@@ -3,7 +3,6 @@ package com.sportal.service;
 import com.sportal.exceptions.AuthenticationException;
 import com.sportal.exceptions.UnauthorizedException;
 import com.sportal.model.pojo.User;
-import com.sportal.model.pojo.enums.RoleName;
 import com.sportal.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,8 +55,15 @@ public class SessionService {
     public void validateAdmin(User u){
         Optional<User> opt=userRepository.findUserByUsername(u.getUsername());
         User user=opt.get();
-        if(!user.isRole()){
+
+        if(!user.is_admin()){
           throw new UnauthorizedException("You are not admin");
      }
     }
+    public void validateLoginAndAdmin(HttpSession session, HttpServletRequest request) {
+        this.validateLogin(session, request);
+        User u = userRepository.findUserById((Long) session.getAttribute(SessionService.USER_ID));
+        this.validateAdmin(u);
+    }
+
 }

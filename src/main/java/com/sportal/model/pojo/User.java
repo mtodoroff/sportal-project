@@ -17,10 +17,8 @@ import java.util.Set;
 @Entity
 @Table(name="users")
 @Component
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class User extends BasePojo{
+
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -33,8 +31,9 @@ public class User {
     private String password;
     @Column(name = "phone")
     private String phone;
+
     @Column(name="is_admin")
-    private boolean role;
+    private boolean is_admin;
     @Column(name = "created_at")
     private Instant created_at;
     @Column(name = "updated_at")
@@ -42,21 +41,28 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Article>articles;
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     @ManyToMany(mappedBy = "likers",cascade = CascadeType.ALL)
     private Set<Comment> likedComments;
+
     @ManyToMany(mappedBy = "dislikers",cascade = CascadeType.ALL)
     private Set<Comment> dislikedComments;
 
+    @ManyToMany(mappedBy = "likedArticles")
+    private Set<Article> likedArticles;
 
-    //TODO add Role enums
+    @ManyToMany(mappedBy = "dislikedArticles")
+    private Set<Article> dislikedArticles;
+
     public User(UserRegisterRequestDTO userDTO){
         this.firstName = userDTO.getFirst_name();
         this.lastName = userDTO.getLast_name();
         this.username = userDTO.getUsername();
         this.password = userDTO.getPassword();
+        this.is_admin = userDTO.is_admin();
         this.phone = userDTO.getPhone();
         this.email = userDTO.getEmail();
         this.created_at = Instant.now();

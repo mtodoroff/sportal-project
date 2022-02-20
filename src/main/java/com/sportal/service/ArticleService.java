@@ -1,5 +1,6 @@
 package com.sportal.service;
 
+import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.InvalidArticle;
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.exceptions.UnauthorizedException;
@@ -9,7 +10,9 @@ import com.sportal.model.dto.articleDTOs.ArticleWithOwnerDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.dto.userDTOs.UserWithoutArticlesDTO;
 import com.sportal.model.pojo.Article;
+
 import com.sportal.model.pojo.Category;
+import com.sportal.model.pojo.Comment;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.ArticleRepository;
 import com.sportal.model.repository.CategoryRepository;
@@ -67,5 +70,42 @@ public class ArticleService {
         CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(art.getCategory_id());
 
         return new ArticleWithOwnerDTO(art, map.map(art.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
+    }
+
+    public int likeArticle(long articleId, long userId) {
+        Article article = getArticleById(articleId);
+        User user = getUserById(userId);
+        if(user.getLikedComments().contains(article)){
+            throw new BadRequestException("User already liked this article!");
+        }
+        article.getLikedArticles().add(user);
+        if (article.getDislikedArticles().contains(user)){
+            article.getDislikedArticles().remove(user);
+        }
+        articleRepository.save(article);
+        return article.getLikedArticles().size();
+    }
+
+    public int dislikeArticle(long articleId, long userId) {
+        Article article = getArticleById(articleId);
+        User user = getUserById(userId);
+        if(user.getDislikedArticles().contains(article)){
+            throw new BadRequestException("User already disliked this article!");
+        }
+        article.getDislikedArticles().add(user);
+        if (article.getLikedArticles().contains(user)){
+            article.getLikedArticles().remove(user);
+        }
+        articleRepository.save(article);
+        return article.getDislikedArticles().size();
+    }
+
+
+    private User getUserById(long id){
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+    }
+
+    private Article getArticleById(long id){
+        return articleRepository.findById(id).orElseThrow( ()-> new NotFoundException("Article not found!"));
     }
 }

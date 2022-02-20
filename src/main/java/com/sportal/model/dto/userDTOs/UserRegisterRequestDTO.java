@@ -1,12 +1,10 @@
 package com.sportal.model.dto.userDTOs;
 
-import com.sportal.model.pojo.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Component;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -34,10 +32,8 @@ public class UserRegisterRequestDTO {
     @Pattern(regexp = "\\d+")
     @Length(min=6,message = "Phone must be at least 6 symbols")
     private String phone;
-    private Role role;
+    private boolean is_admin;
     @NotBlank(message = "Email can not be empty")
     @Email(regexp = "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
     private String email;
-
-
 }
