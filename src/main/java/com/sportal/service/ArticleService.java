@@ -2,6 +2,7 @@ package com.sportal.service;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.InvalidArticle;
+import com.sportal.exceptions.NotFoundCategory;
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.articleDTOs.AddArticleDTO;
 import com.sportal.model.dto.articleDTOs.ArticleResponseDTO;
@@ -38,20 +39,18 @@ public class ArticleService {
     @Autowired
     SessionService sessionService;
 
-    public ArticleResponseDTO addArticle(AddArticleDTO article, Long id) {
-        validateArticle(article);
-        User u = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Owner not found"));
-        Article art = new Article(article, u);
-        Category cat = categoryRepository.findByCategory(article.getCategory());
-        if (cat == null) {
-            cat = new Category(article.getCategory());
-            categoryRepository.save(cat);
+    public ArticleResponseDTO addArticle(AddArticleDTO articleDTO, Long userId) {
+        validateArticle(articleDTO);
+        User u = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Owner not found"));
+        Article article = new Article(articleDTO, u);
+        Category category = categoryRepository.findCategoryById(articleDTO.getCategoryId());
+        if(category==null){
+            throw new NotFoundCategory("Not found category");
         }
-        //TODO ADD String validation
-        art.setCategory_id(cat);
-        ArticleResponseDTO dto = map.map(art, ArticleResponseDTO.class);
-        articleRepository.save(art);
-        dto.setId(cat.getId());
+        article.setCategory_id(category);
+        ArticleResponseDTO dto = map.map(article, ArticleResponseDTO.class);
+        articleRepository.save(article);
+        dto.setId(category.getId());
         return dto;
     }
 
@@ -61,13 +60,21 @@ public class ArticleService {
         }
     }
 
-    public ArticleWithOwnerDTO getByTitle(String title) {
-        Article art = articleRepository.findByTitle(title);
+    public List<ArticleWithOwnerDTO> getByTitle(String title) {
+        if(title.trim().isEmpty()){
+            throw new NotFoundException("Not found Article with name"+title);
+        }
+        List<Article> art = articleRepository.findByTitleUsingLike(title);
         if (art == null) {
             throw new NotFoundException("Article not found");
         }
-        CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(art.getCategory_id());
-        return new ArticleWithOwnerDTO(art, map.map(art.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
+        List<ArticleWithOwnerDTO>articleWithOwnerDTOS=new ArrayList<>();
+        for(Article a:art){
+            CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(a.getCategory_id());
+            ArticleWithOwnerDTO current= new ArticleWithOwnerDTO(a, map.map(a.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
+        articleWithOwnerDTOS.add(current);
+        }
+        return articleWithOwnerDTOS;
     }
 
     public int likeArticle(long articleId, long userId) {

@@ -34,8 +34,9 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserWithArticleDTO> getById(@PathVariable int id,HttpSession session, HttpServletRequest request) {
-        sessionService.validateLoginAndAdmin(session,request);
+    public ResponseEntity<UserWithArticleDTO> getById(@PathVariable int id,HttpSession session) {
+        User user  = sessionService.getLoggedUser(session);
+        sessionService.validateAdmin(user);
         return ResponseEntity.ok(userService.getById(id));
     }
 

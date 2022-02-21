@@ -61,10 +61,4 @@ public class SessionService {
           throw new UnauthorizedException("You are not admin");
      }
     }
-    public void validateLoginAndAdmin(HttpSession session, HttpServletRequest request) {
-        this.validateLogin(session, request);
-        User u = userRepository.findUserById((Long) session.getAttribute(SessionService.USER_ID));
-        this.validateAdmin(u);
-    }
-
 }

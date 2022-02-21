@@ -3,6 +3,7 @@ package com.sportal.controller;
 import com.sportal.exceptions.NotFoundCategory;
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.pojo.Category;
+import com.sportal.model.pojo.User;
 import com.sportal.model.repository.CategoryRepository;
 import com.sportal.model.repository.UserRepository;
 import com.sportal.service.CategoryService;
@@ -33,8 +34,9 @@ public class CategoryController {
     CategoryRepository categoryRepository;
 
     @PostMapping("/categories")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category, HttpSession session, HttpServletRequest request) {
-        sessionService.validateLoginAndAdmin(session, request);
+    public ResponseEntity<Category> addCategory(@RequestBody Category category, HttpSession session) {
+        User user  = sessionService.getLoggedUser(session);
+        sessionService.validateAdmin(user);
         Category c = categoryService.createCategory(category);
         return ResponseEntity.ok(c);
     }
@@ -45,16 +47,18 @@ public class CategoryController {
     }
 
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable long id, HttpSession session, HttpServletRequest request) {
-        sessionService.validateLoginAndAdmin(session, request);
+    public ResponseEntity<String> deleteById(@PathVariable long id, HttpSession session) {
+        User user  = sessionService.getLoggedUser(session);
+        sessionService.validateAdmin(user);
         categoryRepository.deleteById(id);
         return ResponseEntity.ok().body("\"message\": \"Category removed successfully.\"");
     }
 
     @PutMapping("/categories")
     @Validated
-    public ResponseEntity<Category> edit(@Valid @RequestBody Category category, HttpSession session, HttpServletRequest request) {
-        sessionService.validateLoginAndAdmin(session, request);
+    public ResponseEntity<Category> edit(@Valid @RequestBody Category category, HttpSession session) {
+        User user  = sessionService.getLoggedUser(session);
+        sessionService.validateAdmin(user);
         Optional<Category> opt = categoryRepository.findById(category.getId());
         if (!opt.isPresent()) {
             throw new NotFoundException("Category not found");
