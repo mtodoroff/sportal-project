@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class CategoryWithoutArticleDTO {
 
     private long id;
-
+    @NotBlank(message = "Category field cannot be empty")
     private String category;
 
      public CategoryWithoutArticleDTO(Category category){
