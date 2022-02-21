@@ -23,10 +23,11 @@ public class ArticleController {
     @Autowired
     SessionService sessionService;
 
-    //TODO to work properly
+    
     @PostMapping("/articles")
         public ResponseEntity<ArticleResponseDTO> add(@RequestBody AddArticleDTO article, HttpSession session, HttpServletRequest request) {
-        sessionService.validateLoginAndAdmin(session,request);
+        User user  = sessionService.getLoggedUser(session);
+        sessionService.validateAdmin(user);
         return ResponseEntity.ok(articleService.addArticle(article,(Long)session.getAttribute(SessionService.USER_ID)));
     }
 
