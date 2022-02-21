@@ -8,3 +8,4 @@ target
 *.cmd
 mvnw
 .properties
+article_images

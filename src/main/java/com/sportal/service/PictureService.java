@@ -4,21 +4,25 @@ import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.pojo.Picture;
 import com.sportal.model.repository.PictureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-
+import java.util.Optional;
+@Service
 public class PictureService {
 
     @Autowired
     private PictureRepository pictureRepository;
-    //TODO implement
+
     public Picture uploadImage(String filePath, MultipartFile file) {
-        File pFile = new File(filePath + File.separator + "_" + System.nanoTime() + ".png");
-        try (OutputStream os = new FileOutputStream(pFile)) {
+        File picFile = new File(filePath + File.separator + "_" + System.nanoTime() + ".png");
+        try (OutputStream os = new FileOutputStream(picFile)) {
             os.write(file.getBytes());
             Picture picture = new Picture();
-            //TODO get url and save to picture repo
+            picture.setPic_url(picFile.getAbsolutePath());
+            picture = pictureRepository.save(picture);
+            pictureRepository.findById(picture.getId());
             return picture;
         } catch (FileNotFoundException e) {
             throw new NotFoundException("No files to upload" + e.getMessage());
@@ -26,5 +30,19 @@ public class PictureService {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    public long deleteImage(long imageId) {
+        Optional<Picture> picture = pictureRepository.findById(imageId);
+        if (picture.isEmpty()){
+            throw  new NotFoundException("Image not found");
+        } else {
+            Picture pic = picture.get();
+            pictureRepository.delete(pic);
+            File f = new File(pic.getPic_url());
+            f.delete();
+            return pic.getId();
+        }
+
     }
 }

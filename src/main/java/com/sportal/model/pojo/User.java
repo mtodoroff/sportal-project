@@ -1,5 +1,6 @@
 package com.sportal.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,7 +42,7 @@ public class User extends BasePojo{
     private LocalDateTime updated_at;
 
     @OneToMany(mappedBy = "user")
-    private Set<Article>articles;
+    private Set<Article> articles;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Comment> comments;

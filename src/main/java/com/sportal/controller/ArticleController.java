@@ -23,7 +23,7 @@ public class ArticleController {
     @Autowired
     SessionService sessionService;
 
-    
+
     @PostMapping("/articles")
         public ResponseEntity<ArticleResponseDTO> add(@RequestBody AddArticleDTO article, HttpSession session, HttpServletRequest request) {
         User user  = sessionService.getLoggedUser(session);
@@ -37,7 +37,7 @@ public class ArticleController {
         return articleService.getByTitle(title);
     }
 
-    //TODO category must not be null
+
     @GetMapping("/articles/top5")
     public List<ArticleWithoutUserDTO> topFiveMostViewedArticles(){
         return articleService.getTopFiveMostViewed();

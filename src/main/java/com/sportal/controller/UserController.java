@@ -2,6 +2,7 @@ package com.sportal.controller;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.model.dto.userDTOs.*;
+import com.sportal.model.pojo.User;
 import com.sportal.service.SessionService;
 
 import com.sportal.service.UserService;
@@ -26,14 +27,16 @@ public class UserController {
 
 
     @GetMapping("/users")
-    public List<UserGetAllResponseDTO> getAllUsers(HttpSession session, HttpServletRequest request) {
-        sessionService.validateLoginAndAdmin(session,request);
+    public List<UserGetAllResponseDTO> getAllUsers(HttpSession session) {
+        User user = sessionService.getLoggedUser(session);
+        sessionService.validateAdmin(user);
         return userService.getAllUsers();
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserWithArticleDTO> getById(@PathVariable int id,HttpSession session, HttpServletRequest request) {
-        sessionService.validateLoginAndAdmin(session,request);
+    public ResponseEntity<UserWithArticleDTO> getById(@PathVariable int id,HttpSession session) {
+        User user  = sessionService.getLoggedUser(session);
+        sessionService.validateAdmin(user);
         return ResponseEntity.ok(userService.getById(id));
     }
 
