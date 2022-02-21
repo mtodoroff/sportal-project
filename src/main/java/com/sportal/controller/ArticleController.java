@@ -33,8 +33,8 @@ public class ArticleController {
 
     //TODO refactor to match to url category or add new query in Article repository
     @GetMapping("/articles/{title}")
-    public ArticleWithOwnerDTO getByTitle(@PathVariable String title){
-        return articleService.getByTitle(title.toLowerCase());
+    public List<ArticleWithOwnerDTO> getByTitle(@PathVariable String title){
+        return articleService.getByTitle(title);
     }
 
     //TODO category must not be null
