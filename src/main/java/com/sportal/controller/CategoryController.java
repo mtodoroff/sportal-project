@@ -2,6 +2,10 @@ package com.sportal.controller;
 
 import com.sportal.exceptions.NotFoundCategory;
 import com.sportal.exceptions.NotFoundException;
+import com.sportal.model.dto.articleDTOs.ArticleWithOwnerDTO;
+import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.pojo.Category;
 import com.sportal.model.repository.CategoryRepository;
 import com.sportal.model.repository.UserRepository;
@@ -40,8 +44,8 @@ public class CategoryController {
     }
     //TODO Remove circular JSON
     @GetMapping("/categories")
-    public List<Category> getAllCategory() {
-        return categoryRepository.findAll();
+    public List<CategoryWithArticlesDTO> getAllCategory() {
+        return categoryService.findAllArticles();
     }
 
     @DeleteMapping("/categories/{id}")
@@ -65,16 +69,9 @@ public class CategoryController {
         return ResponseEntity.ok(currentCategory);
     }
 
-    @GetMapping("/categories/{name}")
-    public ResponseEntity<Category> findByName(@PathVariable String name) {
-        Optional<Category> opt = Optional.ofNullable(categoryRepository.findByCategory(name.toLowerCase()));
-        if (!opt.isPresent()) {
-            throw new NotFoundException("Category not found");
-        }
-        Category category = opt.get();
-        return ResponseEntity.ok(category);
+    @GetMapping("/categories/{category}")
+    public List<ArticleWithoutUserDTO>getByCategory(@PathVariable String category){
+       return categoryService.getByCategory(category);
     }
-
-
 
 }

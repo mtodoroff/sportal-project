@@ -31,7 +31,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.addArticle(article,(Long)session.getAttribute(SessionService.USER_ID)));
     }
 
-    //TODO refactor to match to url category or add new query in Article repository
+
     @GetMapping("/articles/{title}")
     public List<ArticleWithOwnerDTO> getByTitle(@PathVariable String title){
         return articleService.getByTitle(title);
