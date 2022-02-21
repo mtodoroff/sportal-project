@@ -50,6 +50,7 @@ public class Article extends BasePojo{
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> dislikedArticles;
+
     public Article(AddArticleDTO article, User user){
 
         this.title= article.getTitle();
