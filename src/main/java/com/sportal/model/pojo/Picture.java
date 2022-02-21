@@ -1,5 +1,7 @@
 package com.sportal.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,8 +17,8 @@ public class Picture extends BasePojo{
 
 
     @Column
-    private String url;
-    @OneToOne(cascade = CascadeType.ALL)
+    private String pic_url;
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="article_id")
     private Article article_id;
 }

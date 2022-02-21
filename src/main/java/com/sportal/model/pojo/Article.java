@@ -1,7 +1,8 @@
 package com.sportal.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sportal.model.dto.articleDTOs.AddArticleDTO;
-import com.sportal.model.dto.userDTOs.UserWithoutArticlesDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,8 +35,12 @@ public class Article extends BasePojo{
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="category_id")
     private Category category_id;
+
     @OneToMany(mappedBy = "article",cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "article_id")
+    private List<Picture> articleImages;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
