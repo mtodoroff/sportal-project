@@ -4,6 +4,7 @@ import com.sportal.model.dto.articleDTOs.AddArticleDTO;
 import com.sportal.model.dto.articleDTOs.ArticleResponseDTO;
 import com.sportal.model.dto.articleDTOs.ArticleWithOwnerDTO;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
+import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.User;
 import com.sportal.service.ArticleService;
 import com.sportal.service.SessionService;
@@ -24,7 +25,7 @@ public class ArticleController {
     SessionService sessionService;
 
 
-    @PostMapping("/articles")
+    @PostMapping("/articles/add")
         public ResponseEntity<ArticleResponseDTO> add(@RequestBody AddArticleDTO article, HttpSession session, HttpServletRequest request) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
@@ -59,5 +60,9 @@ public class ArticleController {
     public int unlikePost(@PathVariable long id, HttpSession session){
         User loggedUser = sessionService.getLoggedUser(session);
         return articleService.dislikeArticle(id,loggedUser.getId());
+    }
+    @GetMapping("/articles/get/{articleId}")
+    public ArticleWithoutUserDTO getById(@PathVariable long articleId){
+        return articleService.getById(articleId);
     }
 }

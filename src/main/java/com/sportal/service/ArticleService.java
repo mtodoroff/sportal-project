@@ -140,4 +140,17 @@ public class ArticleService {
         return articleRepository.findById(id).orElseThrow(() -> new NotFoundException("Article not found!"));
     }
 
+    public ArticleWithoutUserDTO getById(long articleId) {
+        Optional<Article> opt=articleRepository.findById(articleId);
+        if(!opt.isPresent()){
+            throw new NotFoundException("The article not found");
+        }
+        Article article=opt.get();
+        article.setViews(article.getViews()+1);
+        articleRepository.save(article);
+        CategoryWithoutArticleDTO categoryWithoutArticleDTO=new CategoryWithoutArticleDTO(article.getCategory_id());
+        ArticleWithoutUserDTO articleWithoutUserDTO =new ArticleWithoutUserDTO(article);
+        articleWithoutUserDTO.setCategory(categoryWithoutArticleDTO);
+        return articleWithoutUserDTO;
+    }
 }
