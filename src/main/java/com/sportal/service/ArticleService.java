@@ -20,6 +20,7 @@ import com.sportal.model.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ArticleService {
         User u = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Owner not found"));
         Article article = new Article(articleDTO, u);
         Category category = categoryRepository.findCategoryById(articleDTO.getCategoryId());
-        if(category==null){
+        if (category == null) {
             throw new NotFoundCategory("Not found category");
         }
         article.setCategory_id(category);
@@ -61,18 +62,18 @@ public class ArticleService {
     }
 
     public List<ArticleWithOwnerDTO> getByTitle(String title) {
-        if(title.trim().isEmpty()){
-            throw new NotFoundException("Not found Article with name"+title);
+        if (title.trim().isEmpty()) {
+            throw new NotFoundException("Not found Article with name" + title);
         }
         List<Article> art = articleRepository.findByTitleUsingLike(title);
         if (art == null) {
             throw new NotFoundException("Article not found");
         }
-        List<ArticleWithOwnerDTO>articleWithOwnerDTOS=new ArrayList<>();
-        for(Article a:art){
+        List<ArticleWithOwnerDTO> articleWithOwnerDTOS = new ArrayList<>();
+        for (Article a : art) {
             CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(a.getCategory_id());
-            ArticleWithOwnerDTO current= new ArticleWithOwnerDTO(a, map.map(a.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
-        articleWithOwnerDTOS.add(current);
+            ArticleWithOwnerDTO current = new ArticleWithOwnerDTO(a, map.map(a.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
+            articleWithOwnerDTOS.add(current);
         }
         return articleWithOwnerDTOS;
     }
@@ -80,11 +81,11 @@ public class ArticleService {
     public int likeArticle(long articleId, long userId) {
         Article article = getArticleById(articleId);
         User user = getUserById(userId);
-        if(user.getLikedComments().contains(article)){
+        if (user.getLikedComments().contains(article)) {
             throw new BadRequestException("User already liked this article!");
         }
         article.getLikedArticles().add(user);
-        if (article.getDislikedArticles().contains(user)){
+        if (article.getDislikedArticles().contains(user)) {
             article.getDislikedArticles().remove(user);
         }
         articleRepository.save(article);
@@ -94,11 +95,11 @@ public class ArticleService {
     public int dislikeArticle(long articleId, long userId) {
         Article article = getArticleById(articleId);
         User user = getUserById(userId);
-        if(user.getDislikedArticles().contains(article)){
+        if (user.getDislikedArticles().contains(article)) {
             throw new BadRequestException("User already disliked this article!");
         }
         article.getDislikedArticles().add(user);
-        if (article.getLikedArticles().contains(user)){
+        if (article.getLikedArticles().contains(user)) {
             article.getLikedArticles().remove(user);
         }
         articleRepository.save(article);
@@ -108,7 +109,7 @@ public class ArticleService {
     public List<ArticleWithoutUserDTO> getTopFiveMostViewed() {
         List<Article> articles = articleRepository.findTopByViews();
         List<ArticleWithoutUserDTO> articleWithoutUserDTOS = new ArrayList<>();
-        if(articles.size() > 0) {
+        if (articles.size() > 0) {
             for (Article a : articles) {
                 Optional<Article> articleById = articleRepository.findById(a.getId());
                 articleById.ifPresent(article -> articleWithoutUserDTOS.add(new ArticleWithoutUserDTO(article)));
@@ -118,26 +119,38 @@ public class ArticleService {
         return articleWithoutUserDTOS;
     }
 
-    public List<ArticleWithoutUserDTO> latestArticles(){
+    public List<ArticleWithoutUserDTO> latestArticles() {
         List<Article> articlesByDate = articleRepository.latestFiveArticles()
                 .stream()
                 .limit(5)
                 .collect(Collectors.toList());
         List<ArticleWithoutUserDTO> latestArticles = new ArrayList<>();
-        for(Article a : articlesByDate){
+        for (Article a : articlesByDate) {
             latestArticles.add(new ArticleWithoutUserDTO(a));
         }
         return latestArticles;
     }
 
     //TODO Add User Article and Category to global Service
-    private User getUserById(long id){
+    private User getUserById(long id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    private Article getArticleById(long id){
-        return articleRepository.findById(id).orElseThrow( ()-> new NotFoundException("Article not found!"));
+    private Article getArticleById(long id) {
+        return articleRepository.findById(id).orElseThrow(() -> new NotFoundException("Article not found!"));
     }
 
-
+    public ArticleWithoutUserDTO getById(long articleId) {
+        Optional<Article> opt=articleRepository.findById(articleId);
+        if(!opt.isPresent()){
+            throw new NotFoundException("The article not found");
+        }
+        Article article=opt.get();
+        article.setViews(article.getViews()+1);
+        articleRepository.save(article);
+        CategoryWithoutArticleDTO categoryWithoutArticleDTO=new CategoryWithoutArticleDTO(article.getCategory_id());
+        ArticleWithoutUserDTO articleWithoutUserDTO =new ArticleWithoutUserDTO(article);
+        articleWithoutUserDTO.setCategory(categoryWithoutArticleDTO);
+        return articleWithoutUserDTO;
+    }
 }
