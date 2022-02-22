@@ -11,9 +11,11 @@ import com.sportal.model.pojo.User;
 import com.sportal.model.repository.ArticleRepository;
 import com.sportal.model.repository.CommentRepository;
 import com.sportal.model.repository.UserRepository;
+import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
@@ -45,7 +47,7 @@ public class CommentService {
         Comment comment = getCommentById(commentId);
         commentRepository.delete(comment);
     }
-
+    @Transactional
     public ArticleResponseDTO editComment(CommentEditRequestDTO editedComment) {
         Comment comment = getCommentById(editedComment.getId());
         String text = editedComment.getComment_text();
@@ -60,6 +62,7 @@ public class CommentService {
         return new ArticleResponseDTO(article);
     }
 
+    @Synchronized
     public int likeComment(long commentId, long userId) {
         Comment comment = getCommentById(commentId);
         User user = getUserById(userId);
@@ -73,7 +76,7 @@ public class CommentService {
         commentRepository.save(comment);
         return comment.getLikers().size();
     }
-
+    @Synchronized
     public int dislikeComment(long commentId, long userId) {
         Comment comment = getCommentById(commentId);
         User user = getUserById(userId);
