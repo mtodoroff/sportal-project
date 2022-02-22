@@ -1,5 +1,7 @@
 package com.sportal.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -33,6 +36,15 @@ public class Comment extends BasePojo{
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "parent_comment_id")
+    private Comment parent_comment_id;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "parent_comment_id")
+    private List<Comment> replies;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_like_comments",
@@ -51,8 +63,15 @@ public class Comment extends BasePojo{
         this.commentText = commentText;
         this.article = article;
         this.user = user;
-        this.likers = new HashSet<>();
-        this.dislikers = new HashSet<>();
+        this.created_at = LocalDateTime.now();
+        this.updated_at = LocalDateTime.now();
+    }
+
+    public Comment(String commentText, Article article, User user, Comment parentComment) {
+        this.commentText = commentText;
+        this.article = article;
+        this.user = user;
+        this.parent_comment_id = parentComment;
         this.created_at = LocalDateTime.now();
         this.updated_at = LocalDateTime.now();
     }

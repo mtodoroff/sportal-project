@@ -2,6 +2,7 @@ package com.sportal.controller;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.model.dto.articleDTOs.ArticleResponseDTO;
+import com.sportal.model.dto.commentDTOs.CommentAddReplyRequestDTO;
 import com.sportal.model.dto.commentDTOs.CommentAddRequestDTO;
 import com.sportal.model.dto.commentDTOs.CommentEditRequestDTO;
 import com.sportal.model.pojo.User;
@@ -26,6 +27,12 @@ public class CommentController {
         return commentService.addComment(loggedUser,comment);
     }
 
+    @PostMapping("comments/reply")
+    public ArticleResponseDTO replyToComment(HttpSession sessoin, @RequestBody CommentAddReplyRequestDTO reply){
+        User loggedUser = sessionService.getLoggedUser(sessoin);
+        return commentService.addCommentReply(loggedUser, reply);
+    }
+
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<String> deleteComment(@PathVariable long id){
         commentService.deleteComment(id);
@@ -42,6 +49,7 @@ public class CommentController {
             throw new BadRequestException("Only the owner of the comment can edit it");
         }
     }
+
 
     @PostMapping("/comments/{id}/like")
     public int likePost(@PathVariable long id, HttpSession session){

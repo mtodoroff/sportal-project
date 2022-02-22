@@ -3,6 +3,7 @@ package com.sportal.service;
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.articleDTOs.ArticleResponseDTO;
+import com.sportal.model.dto.commentDTOs.CommentAddReplyRequestDTO;
 import com.sportal.model.dto.commentDTOs.CommentAddRequestDTO;
 import com.sportal.model.dto.commentDTOs.CommentEditRequestDTO;
 import com.sportal.model.pojo.Article;
@@ -41,6 +42,14 @@ public class CommentService {
     public boolean userOwnsComment(long userId, long commentId) {
         Comment comment = getCommentById(commentId);
         return comment.getUser().getId() == userId;
+    }
+
+    public ArticleResponseDTO addCommentReply(User loggedUser, CommentAddReplyRequestDTO reply) {
+        Comment parent = commentRepository.findById(reply.getParent_comment_id()).orElseThrow(() -> new NotFoundException("Comment not found!"));
+        Article article = parent.getArticle();
+        Comment comment = new Comment(reply.getComment_text(), article, loggedUser, parent);
+        commentRepository.save(comment);
+        return new ArticleResponseDTO(article);
     }
 
     public void deleteComment(long commentId) {
