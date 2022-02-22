@@ -15,10 +15,9 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Picture extends BasePojo{
 
-
     @Column
     private String pic_url;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="article_id")
     private Article article_id;
 }

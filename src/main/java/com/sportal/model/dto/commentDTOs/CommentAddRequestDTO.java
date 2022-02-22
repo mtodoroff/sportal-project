@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Component
 public class CommentAddRequestDTO {
-    private long articleId;
+    private long article_id;
     @NotBlank(message = "Comment field is cannot be empty")
     private String comment_text;
 }

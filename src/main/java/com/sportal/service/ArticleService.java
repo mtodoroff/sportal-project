@@ -17,11 +17,13 @@ import com.sportal.model.pojo.User;
 import com.sportal.model.repository.ArticleRepository;
 import com.sportal.model.repository.CategoryRepository;
 import com.sportal.model.repository.UserRepository;
+import lombok.Synchronized;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +79,7 @@ public class ArticleService {
         }
         return articleWithOwnerDTOS;
     }
-
+    @Synchronized
     public int likeArticle(long articleId, long userId) {
         Article article = getArticleById(articleId);
         User user = getUserById(userId);
@@ -92,6 +94,7 @@ public class ArticleService {
         return article.getLikedArticles().size();
     }
 
+    @Synchronized
     public int dislikeArticle(long articleId, long userId) {
         Article article = getArticleById(articleId);
         User user = getUserById(userId);

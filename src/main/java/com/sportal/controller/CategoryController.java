@@ -13,6 +13,7 @@ import com.sportal.model.repository.UserRepository;
 import com.sportal.service.CategoryService;
 import com.sportal.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class CategoryController {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         Category c = categoryService.createCategory(category);
-        return ResponseEntity.ok(c);
+        return new ResponseEntity(c, HttpStatus.CREATED);
     }
     //TODO Remove circular JSON
     @GetMapping("/categories")

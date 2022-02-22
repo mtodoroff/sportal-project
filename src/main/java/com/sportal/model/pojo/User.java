@@ -41,7 +41,7 @@ public class User extends BasePojo{
     @Column(name = "updated_at")
     private LocalDateTime updated_at;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private Set<Article> articles;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
@@ -53,10 +53,10 @@ public class User extends BasePojo{
     @ManyToMany(mappedBy = "dislikers",cascade = CascadeType.ALL)
     private Set<Comment> dislikedComments;
 
-    @ManyToMany(mappedBy = "likedArticles")
+    @ManyToMany(mappedBy = "likedArticles",cascade = CascadeType.ALL)
     private Set<Article> likedArticles;
 
-    @ManyToMany(mappedBy = "dislikedArticles")
+    @ManyToMany(mappedBy = "dislikedArticles",cascade = CascadeType.ALL)
     private Set<Article> dislikedArticles;
 
     public User(UserRegisterRequestDTO userDTO){
