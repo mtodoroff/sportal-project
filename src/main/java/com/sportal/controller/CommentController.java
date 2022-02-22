@@ -20,8 +20,7 @@ public class CommentController {
     private CommentService commentService;
     @Autowired
     private SessionService sessionService;
-    //TODO this always return Article Not found
-    @PostMapping("comments")
+    @PostMapping("/comments")
     public ArticleResponseDTO addComment(HttpSession session,@RequestBody CommentAddRequestDTO comment){
         User loggedUser = sessionService.getLoggedUser(session);
         return commentService.addComment(loggedUser,comment);
@@ -55,5 +54,4 @@ public class CommentController {
         User loggedUser = sessionService.getLoggedUser(session);
         return commentService.dislikeComment(id,loggedUser.getId());
     }
-
 }

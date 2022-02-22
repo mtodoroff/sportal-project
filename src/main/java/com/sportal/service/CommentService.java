@@ -30,7 +30,7 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     public ArticleResponseDTO addComment(User user, CommentAddRequestDTO addedComment){
-        Article article = getArticleById(addedComment.getArticleId());
+        Article article = getArticleById(addedComment.getArticle_id());
         Comment comment = new Comment(addedComment.getComment_text(),article,user);
         commentRepository.save(comment);
         return new ArticleResponseDTO(article);

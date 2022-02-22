@@ -1,14 +1,10 @@
 package com.sportal.model.pojo;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
-
 import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,12 +27,10 @@ public class Comment extends BasePojo{
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "article_id")
-    @JsonBackReference
     private Article article;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    @JsonBackReference
     private User user;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -44,7 +38,6 @@ public class Comment extends BasePojo{
             name = "users_like_comments",
             joinColumns = @JoinColumn(name = "comment_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @JsonBackReference
     private Set<User> likers;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -52,7 +45,6 @@ public class Comment extends BasePojo{
             name = "users_dislike_comments",
             joinColumns = @JoinColumn(name = "comment_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @JsonBackReference
     private Set<User> dislikers;
 
     public Comment(String commentText, Article article, User user) {
