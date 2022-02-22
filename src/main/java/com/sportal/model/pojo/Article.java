@@ -27,10 +27,10 @@ public class Article extends BasePojo{
     private LocalDateTime updated_at;
     @Column
     private long views;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="author_id")
     private User user;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name="category_id")
     private Category category_id;
     @OneToMany(mappedBy = "article",cascade = CascadeType.ALL)

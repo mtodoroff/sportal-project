@@ -65,4 +65,8 @@ public class ArticleController {
     public ArticleWithoutUserDTO getById(@PathVariable long articleId){
         return articleService.getById(articleId);
     }
+    @DeleteMapping("/articles/delete/{articleId}")
+    public ArticleWithoutUserDTO deleteById(@PathVariable long articleId){
+        return articleService.deleteById(articleId);
+    }
 }
