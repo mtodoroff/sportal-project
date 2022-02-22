@@ -1,10 +1,6 @@
 package com.sportal.controller;
 
-import com.sportal.model.dto.articleDTOs.AddArticleDTO;
-import com.sportal.model.dto.articleDTOs.ArticleResponseDTO;
-import com.sportal.model.dto.articleDTOs.ArticleWithOwnerDTO;
-import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
-import com.sportal.model.pojo.Article;
+import com.sportal.model.dto.articleDTOs.*;
 import com.sportal.model.pojo.User;
 import com.sportal.service.ArticleService;
 import com.sportal.service.SessionService;
@@ -31,7 +27,12 @@ public class ArticleController {
         sessionService.validateAdmin(user);
         return ResponseEntity.ok(articleService.addArticle(article,(Long)session.getAttribute(SessionService.USER_ID)));
     }
-
+    @PutMapping("/articles/edit")
+    public ResponseEntity<ArticleResponseDTO>editArticle(@RequestBody ArticleEditDTO articleDTO, HttpSession session, HttpServletRequest request){
+        User user =sessionService.getLoggedUser(session);
+        sessionService.validateAdmin(user);
+        return ResponseEntity.ok(articleService.editArticle(articleDTO,(Long)session.getAttribute(SessionService.USER_ID)));
+    }
 
     @GetMapping("/articles/{title}")
     public List<ArticleWithOwnerDTO> getByTitle(@PathVariable String title){
@@ -66,7 +67,10 @@ public class ArticleController {
         return articleService.getById(articleId);
     }
     @DeleteMapping("/articles/delete/{articleId}")
-    public ArticleWithoutUserDTO deleteById(@PathVariable long articleId){
+    public ArticleWithoutUserDTO deleteById(@PathVariable long articleId, HttpSession session, HttpServletRequest request){
+        User user =sessionService.getLoggedUser(session);
+        sessionService.validateAdmin(user);
         return articleService.deleteById(articleId);
     }
+
 }

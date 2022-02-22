@@ -4,10 +4,7 @@ import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.InvalidArticle;
 import com.sportal.exceptions.NotFoundCategory;
 import com.sportal.exceptions.NotFoundException;
-import com.sportal.model.dto.articleDTOs.AddArticleDTO;
-import com.sportal.model.dto.articleDTOs.ArticleResponseDTO;
-import com.sportal.model.dto.articleDTOs.ArticleWithOwnerDTO;
-import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
+import com.sportal.model.dto.articleDTOs.*;
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.dto.userDTOs.UserWithoutArticlesDTO;
 import com.sportal.model.pojo.Article;
@@ -21,9 +18,8 @@ import lombok.Synchronized;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -170,5 +166,18 @@ public class ArticleService {
         articleWithoutUserDTO.setCategory(categoryWithoutArticleDTO);
         articleRepository.delete(article);
         return articleWithoutUserDTO;
+    }
+
+    public ArticleResponseDTO editArticle(ArticleEditDTO articleDTO, Long attribute) {
+      Optional<Article> opt =articleRepository.findById(articleDTO.getId());
+      if(!opt.isPresent()){
+          throw  new NotFoundException("Not found article to edit");
+      }
+      Article article =opt.get();
+      article.setTitle(articleDTO.getTitle());
+      article.setContent(articleDTO.getContent());
+      article.setUpdated_at(LocalDateTime.now());
+      articleRepository.save(article);
+      return new ArticleResponseDTO(article);
     }
 }

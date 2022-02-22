@@ -63,5 +63,4 @@ public class Article extends BasePojo{
         this.user=user;
 
     }
-
 }
