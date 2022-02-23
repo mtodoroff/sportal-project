@@ -14,8 +14,6 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category,Long> {
     Category findCategoryById(Long id);
 
-    Category findByCategory(String category);
-
-    @Query(value = "FROM Category  WHERE category LIKE %:category%")
-    Category findByCategoryUsingLike(@Param("category") String category);
+    @Query(value = "FROM Category  WHERE category LIKE :category%")
+    List<Category> findByCategoryUsingLike(@Param("category") String category);
 }
