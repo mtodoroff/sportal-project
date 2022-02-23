@@ -20,4 +20,5 @@ public class Picture extends BasePojo{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="article_id")
     private Article article_id;
+
 }

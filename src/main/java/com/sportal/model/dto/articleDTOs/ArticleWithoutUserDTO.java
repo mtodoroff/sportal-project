@@ -27,6 +27,8 @@ public class ArticleWithoutUserDTO {
 
     private String pic_url;
 
+    private String videoUrl;
+
     private CategoryWithoutArticleDTO category;
 
     public ArticleWithoutUserDTO(Article article) {
@@ -36,6 +38,12 @@ public class ArticleWithoutUserDTO {
         this.created_at = article.getCreated_at();
         this.updated_at = article.getUpdated_at();
         this.views = article.getViews();
-        this.pic_url = article.getArticleImages().getPic_url();
+        this.category=new CategoryWithoutArticleDTO(article.getCategory_id());
+        if(article.getArticleImages()!=null){
+            this.pic_url=article.getArticleImages().getPic_url();
+        }
+        if(article.getVideo()!=null){
+            this.videoUrl=article.getVideo().getVideo_url();
+        }
     }
 }
