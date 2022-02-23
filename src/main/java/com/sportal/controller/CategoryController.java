@@ -74,8 +74,8 @@ public class CategoryController {
         return ResponseEntity.ok(currentCategory);
     }
 
-    @GetMapping("/categories/{category}")
-    public List<ArticleWithoutUserDTO>getByCategory(@PathVariable String category){
+    @GetMapping("/categories/search")
+    public List<ArticleWithoutUserDTO>getByCategory(@RequestParam(value = "category") String category){
        return categoryService.getByCategory(category);
     }
 

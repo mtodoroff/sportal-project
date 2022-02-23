@@ -44,7 +44,7 @@ public class Article extends BasePojo{
 
     @OneToOne(mappedBy = "article")
     private Video video;
-    
+
     @ManyToMany
     @JoinTable(
             name = "users_like_articles",
