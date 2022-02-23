@@ -1,6 +1,5 @@
 package com.sportal.model.dto.userDTOs;
 
-import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Comment;
 import com.sportal.model.pojo.User;
 import lombok.Getter;
@@ -9,8 +8,6 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
-
 @Getter
 @Setter
 @NoArgsConstructor

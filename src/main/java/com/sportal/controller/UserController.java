@@ -42,14 +42,12 @@ public class UserController {
 
 
     @PostMapping("/users/register")
-    @Validated
-    public ResponseEntity<UserRegisterResponseDTO> register(@Valid @RequestBody UserRegisterRequestDTO userDTO) {
+    public ResponseEntity<UserRegisterResponseDTO> register(@RequestBody UserRegisterRequestDTO userDTO) {
         return new ResponseEntity<>(userService.registerUser(userDTO), HttpStatus.CREATED);
     }
 
     @PostMapping("/users/login")
-    @Validated
-    public ResponseEntity<UserLoginResponseDTO> login(@Valid @RequestBody UserLoginRequestDTO userDTO, HttpSession session,HttpServletRequest request) {
+    public ResponseEntity<UserLoginResponseDTO> login(@RequestBody UserLoginRequestDTO userDTO, HttpSession session,HttpServletRequest request) {
         if (sessionService.userAlreadyLogged(session)) {
             throw new BadRequestException("You are already logged in!");
         }
@@ -73,8 +71,7 @@ public class UserController {
     }
 
     @PutMapping("/users/edit")
-    @Validated
-    public ResponseEntity<UserEditDTO> editUser(@Valid @RequestBody UserEditDTO userDTO, HttpSession session) {
+    public ResponseEntity<UserEditDTO> editUser(@RequestBody UserEditDTO userDTO, HttpSession session) {
         if (!sessionService.userAlreadyLogged(session)) {
             throw new BadRequestException("You must be logged in!");
         }
@@ -82,8 +79,7 @@ public class UserController {
     }
 
     @PatchMapping("/users/change-password")
-    @Validated
-    public ResponseEntity<String> changePassword(@Valid @RequestBody UserChangePasswordRequest userChangePasswordRequest, HttpSession session, HttpServletRequest request) {
+    public ResponseEntity<String> changePassword(@RequestBody UserChangePasswordRequest userChangePasswordRequest, HttpSession session, HttpServletRequest request) {
         if (!sessionService.userAlreadyLogged(session)) {
             throw new BadRequestException("You must be logged in!");
         }

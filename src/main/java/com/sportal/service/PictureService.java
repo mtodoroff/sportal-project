@@ -51,6 +51,5 @@ public class PictureService {
             f.delete();
             return pic.getId();
         }
-
     }
 }
