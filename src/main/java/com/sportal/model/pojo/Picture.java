@@ -20,4 +20,5 @@ public class Picture extends BasePojo{
     @ManyToOne
     @JoinColumn(name="article_id")
     private Article article_id;
+
 }

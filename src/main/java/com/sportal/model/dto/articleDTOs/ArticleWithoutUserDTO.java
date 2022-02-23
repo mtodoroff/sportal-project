@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,7 +28,9 @@ public class ArticleWithoutUserDTO {
 
     private long views;
 
-    private String pic_url;
+    private Set<String> pic_url;
+
+    private String videoUrl;
 
     private CategoryWithoutArticleDTO category;
 
@@ -36,5 +41,12 @@ public class ArticleWithoutUserDTO {
         this.created_at = article.getCreated_at();
         this.updated_at = article.getUpdated_at();
         this.views = article.getViews();
+        this.category=new CategoryWithoutArticleDTO(article.getCategory_id());
+        if(article.getArticleImages()!=null){
+            this.pic_url=article.getArticleImages().stream().map(e -> e.getPic_url()).collect(Collectors.toSet());
+        }
+        if(article.getVideo()!=null){
+            this.videoUrl=article.getVideo().getVideo_url();
+        }
     }
 }

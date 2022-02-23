@@ -74,8 +74,8 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/search")
-    public List<ArticleWithoutUserDTO>getByCategory(@RequestParam(value = "category") String category){
-       return categoryService.getByCategory(category);
+    public List<ArticleWithoutUserDTO> searchByCategoryName(@RequestParam(value = "category") String category){
+       return categoryService.searchByCategory(category);
     }
 
 }

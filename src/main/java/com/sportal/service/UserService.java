@@ -135,7 +135,7 @@ public class UserService {
         dto.setArticle(currentDTO);
         return dto;
     }
-    
+
     public void deleteUser(long id) {
         if (!userRepository.existsById(id)) {
             throw new BadRequestException("User doesn't exists");
