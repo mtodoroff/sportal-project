@@ -59,7 +59,7 @@ public class ArticleService {
         }
     }
 
-    public List<ArticleWithOwnerDTO> getByTitle(String title) {
+    public List<ArticleWithOwnerDTO> searchByTitle(String title) {
         if (title.trim().isEmpty()) {
             throw new NotFoundException("Not found Article with name" + title);
         }
@@ -80,7 +80,7 @@ public class ArticleService {
         Article article = getArticleById(articleId);
         User user = getUserById(userId);
         if (user.getLikedComments().contains(article)) {
-            throw new BadRequestException("User already liked this article!");
+            throw new BadRequestException("You already liked this article!");
         }
         article.getLikedArticles().add(user);
         if (article.getDislikedArticles().contains(user)) {
@@ -95,7 +95,7 @@ public class ArticleService {
         Article article = getArticleById(articleId);
         User user = getUserById(userId);
         if (user.getDislikedArticles().contains(article)) {
-            throw new BadRequestException("User already disliked this article!");
+            throw new BadRequestException("You already disliked this article!");
         }
         article.getDislikedArticles().add(user);
         if (article.getLikedArticles().contains(user)) {
@@ -130,7 +130,6 @@ public class ArticleService {
         return latestArticles;
     }
 
-    //TODO Add User Article and Category to global Service
     private User getUserById(long id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }

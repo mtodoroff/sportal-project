@@ -8,6 +8,7 @@ import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.dto.userDTOs.*;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Category;
+import com.sportal.model.pojo.Comment;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.UserRepository;
 import com.sportal.util.Validator;
@@ -89,7 +90,6 @@ public class UserService {
         }
     }
 
-
     @Transactional
     public void changePassword(UserChangePasswordRequest userChangePasswordRequest) {
         User user = userRepository.findById(userChangePasswordRequest.getId()).orElseThrow(()-> new NotFoundException("User not found!"));
@@ -135,11 +135,17 @@ public class UserService {
         dto.setArticle(currentDTO);
         return dto;
     }
-
+    
     public void deleteUser(long id) {
         if (!userRepository.existsById(id)) {
             throw new BadRequestException("User doesn't exists");
         }
         userRepository.deleteById(id);
+    }
+
+    public List<Comment> getUserComments(long id) {
+        User user = userRepository.getById(id);
+        List<Comment> comments = user.getComments();
+        return comments;
     }
 }

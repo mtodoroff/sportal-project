@@ -38,8 +38,8 @@ public class Article extends BasePojo{
     @OneToMany(mappedBy = "article")
     private List<Comment> comments;
 
-    @OneToOne(mappedBy = "article_id")
-    private Picture articleImages;
+    @OneToMany(mappedBy = "article_id")
+    private Set<Picture> articleImages;
 
 
     @OneToOne(mappedBy = "article")

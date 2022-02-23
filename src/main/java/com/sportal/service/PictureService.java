@@ -17,8 +17,6 @@ public class PictureService {
 
     @Autowired
     private PictureRepository pictureRepository;
-    @Autowired
-    private ArticleRepository articleRepository;
 
 
     public Picture uploadImage(String filePath, MultipartFile file, ImageUploadDTO imageUploadDTO) {

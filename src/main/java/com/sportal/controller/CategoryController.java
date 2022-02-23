@@ -60,8 +60,7 @@ public class CategoryController {
     }
 
     @PutMapping("/categories")
-    @Validated
-    public ResponseEntity<Category> edit(@Valid @RequestBody Category category, HttpSession session) {
+    public ResponseEntity<Category> edit(@RequestBody Category category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         Optional<Category> opt = categoryRepository.findById(category.getId());
