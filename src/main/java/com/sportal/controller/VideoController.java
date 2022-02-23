@@ -1,11 +1,13 @@
 package com.sportal.controller;
 
 import com.sportal.exceptions.NotFoundException;
+import com.sportal.model.dto.videoDTOs.DeleteVideoResponseDTO;
 import com.sportal.model.pojo.User;
 import com.sportal.service.SessionService;
 import com.sportal.service.VideoService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,5 +40,11 @@ public class VideoController {
             throw new NotFoundException("File does not exist");
         }
         Files.copy(f.toPath(),response.getOutputStream());
+    }
+    @DeleteMapping("articles/{videoId}")
+    public ResponseEntity<DeleteVideoResponseDTO>deleteVideoById(@RequestParam(value = "videoId") Long videoId,HttpServletRequest request){
+        User user  = sessionService.getLoggedUser(request.getSession());
+        sessionService.validateAdmin(user);
+        return videoService.deleteById(videoId);
     }
 }
