@@ -33,20 +33,20 @@ public class Article extends BasePojo{
     @ManyToOne
     @JoinColumn(name="category_id")
     private Category category_id;
-    @OneToMany(mappedBy = "article",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "article")
     private List<Comment> comments;
 
-    @OneToOne(mappedBy = "article_id",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "article_id")
     private Picture articleImages;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "users_like_articles",
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> likedArticles;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "users_dislike_articles",
             joinColumns = @JoinColumn(name = "article_id"),

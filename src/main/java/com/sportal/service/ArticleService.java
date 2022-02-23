@@ -42,7 +42,7 @@ public class ArticleService {
         validateArticle(articleDTO);
         User u = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Owner not found"));
         Article article = new Article(articleDTO, u);
-        Category category = categoryRepository.findCategoryById(articleDTO.getCategoryId());
+        Category category = categoryRepository.findCategoryById(articleDTO.getCategory_id());
         if (category == null) {
             throw new NotFoundCategory("Not found category");
         }
@@ -173,7 +173,7 @@ public class ArticleService {
       if(!opt.isPresent()){
           throw  new NotFoundException("Not found article to edit");
       }
-      Article article =opt.get();
+      Article article = opt.get();
       article.setTitle(articleDTO.getTitle());
       article.setContent(articleDTO.getContent());
       article.setUpdated_at(LocalDateTime.now());

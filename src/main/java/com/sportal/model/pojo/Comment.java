@@ -28,11 +28,11 @@ public class Comment extends BasePojo{
     @Column(name = "updated_at")
     private LocalDateTime updated_at;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -45,14 +45,14 @@ public class Comment extends BasePojo{
     @OneToMany(mappedBy = "parent_comment_id")
     private List<Comment> replies;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "users_like_comments",
             joinColumns = @JoinColumn(name = "comment_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> likers;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "users_dislike_comments",
             joinColumns = @JoinColumn(name = "comment_id"),
