@@ -14,8 +14,8 @@ import javax.persistence.*;
 public class Video extends BasePojo{
 
     @Column
-    private String url;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
-    private Article article_id;
+    private String video_url;
+    @OneToOne
+    @JoinColumn(name = "article_id")
+    private Article article;
 }

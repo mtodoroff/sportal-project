@@ -38,6 +38,5 @@ public class PictureController {
         User loggedUser = sessionService.getLoggedUser(ses);
         sessionService.validateAdmin(loggedUser);
         return new ResponseEntity(pictureService.deleteImage(deleteRq.getId()),HttpStatus.OK);
-
     }
 }
