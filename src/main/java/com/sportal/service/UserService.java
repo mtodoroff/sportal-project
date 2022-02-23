@@ -69,11 +69,6 @@ public class UserService {
             user.setFirstName(userEditDTO.getFirstName());
             user.setLastName(userEditDTO.getLastName());
             user.setPhone(userEditDTO.getPhone());
-            user.setUsername(userEditDTO.getUsername());
-            //TODO all method works but return status 500, should return
-            if (userRepository.findUserByUsername(userEditDTO.getUsername()).isEmpty()) {
-                throw new BadRequestException("Username already exists");
-            }
             user.setUpdated_at(LocalDateTime.now());
             userRepository.save(user);
             return modelMapper.map(user,UserEditDTO.class);

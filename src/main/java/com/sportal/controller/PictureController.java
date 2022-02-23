@@ -3,6 +3,7 @@ package com.sportal.controller;
 import com.sportal.model.dto.imageDTOs.DeleteImageRequestDTO;
 import com.sportal.model.dto.imageDTOs.DeleteImageResponseDTO;
 import com.sportal.model.dto.imageDTOs.ImageUploadDTO;
+import com.sportal.model.dto.userDTOs.UserRegisterRequestDTO;
 import com.sportal.model.pojo.User;
 import com.sportal.service.PictureService;
 import com.sportal.service.SessionService;
@@ -27,10 +28,10 @@ public class PictureController {
 
 
     @PostMapping("/images")
-    public ResponseEntity<ImageUploadDTO> addImageToArticle(@RequestParam(name="file") MultipartFile file, HttpSession session) {
+    public ResponseEntity<ImageUploadDTO> addImageToArticle(@RequestParam(value="file") MultipartFile file, @ModelAttribute ImageUploadDTO imageUploadDTO, HttpSession session) {
         User loggedUser = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(loggedUser);
-        return new ResponseEntity(pictureService.uploadImage(filePath, file), HttpStatus.CREATED);
+        return new ResponseEntity(pictureService.uploadImage(filePath, file,imageUploadDTO), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/images")

@@ -53,6 +53,7 @@ public class UserController {
         if (sessionService.userAlreadyLogged(session)) {
             throw new BadRequestException("You are already logged in!");
         }
+
         UserLoginResponseDTO userLoginResponseDTO = userService.login(userDTO);
         session.setMaxInactiveInterval(60 * 60 * 3);
         sessionService.loginUser(session, userLoginResponseDTO.getId(),request);
