@@ -33,18 +33,18 @@ public class CategoryService {
     }
 
     public List<ArticleWithoutUserDTO> getByCategory(String category) {
-        Category byCategory = categoryRepository.findByCategoryUsingLike(category);
-        if (category.trim().isEmpty() || byCategory == null) {
-            throw new NotFoundCategory("Incorrect  category name");
+        List<Category> categoryList = categoryRepository.findByCategoryUsingLike(category);
+        if (category.trim().isEmpty() || categoryList == null) {
+            throw new NotFoundCategory("Category not found");
         }
-        System.out.println(byCategory.getCategory());
-        System.out.println(byCategory.getArticles());
+
         List<ArticleWithoutUserDTO> articleWithoutUserDTO = new ArrayList<>();
 
-        for (Article a : byCategory.getArticles()) {
-            System.out.println(a.getContent());
-            ArticleWithoutUserDTO articleWithoutUserDTOCurrent = mapper.map(a, ArticleWithoutUserDTO.class);
-            articleWithoutUserDTO.add(articleWithoutUserDTOCurrent);
+        for (Category categoryElement : categoryList) {
+            for (Article a : categoryElement.getArticles()) {
+                ArticleWithoutUserDTO articleWithoutUserDTOCurrent = mapper.map(a, ArticleWithoutUserDTO.class);
+                articleWithoutUserDTO.add(articleWithoutUserDTOCurrent);
+            }
         }
         return articleWithoutUserDTO;
     }

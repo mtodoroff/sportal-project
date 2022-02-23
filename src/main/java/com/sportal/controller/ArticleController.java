@@ -35,8 +35,8 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.editArticle(articleDTO,(Long)session.getAttribute(SessionService.USER_ID)));
     }
 
-    @GetMapping("/articles/{title}")
-    public List<ArticleWithOwnerDTO> getByTitle(@PathVariable String title){
+    @GetMapping("/articles/search")
+    public List<ArticleWithOwnerDTO> getByTitle(@RequestParam(value = "title") String title){
         return articleService.getByTitle(title);
     }
 

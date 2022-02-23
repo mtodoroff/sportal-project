@@ -36,6 +36,5 @@ public class ArticleWithoutUserDTO {
         this.created_at = article.getCreated_at();
         this.updated_at = article.getUpdated_at();
         this.views = article.getViews();
-        this.pic_url = article.getArticleImages().getPic_url();
     }
 }
