@@ -67,6 +67,5 @@ public class Article extends BasePojo{
         this.updated_at=LocalDateTime.now();
         this.views=0;
         this.user=user;
-
     }
 }

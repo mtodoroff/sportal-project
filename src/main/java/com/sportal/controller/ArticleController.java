@@ -71,7 +71,6 @@ public class ArticleController {
     public ArticleWithoutUserDTO deleteById(@PathVariable long articleId, HttpSession session, HttpServletRequest request){
         User user =sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
-
         return articleService.deleteById(articleId);
     }
 

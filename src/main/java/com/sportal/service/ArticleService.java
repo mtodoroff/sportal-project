@@ -60,13 +60,11 @@ public class ArticleService {
     }
 
     public List<ArticleWithOwnerDTO> getByTitle(String title) {
-        if (title.trim().isEmpty()) {
+        if (title==null||title.trim().isEmpty()) {
             throw new NotFoundException("Not found Article with name" + title);
         }
         List<Article> art = articleRepository.findByTitleUsingLike(title);
-        if (art == null) {
-            throw new NotFoundException("Article not found");
-        }
+        verifyArticleId(art == null, "Article not found");
         List<ArticleWithOwnerDTO> articleWithOwnerDTOS = new ArrayList<>();
         for (Article a : art) {
             CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(a.getCategory_id());
@@ -77,6 +75,7 @@ public class ArticleService {
     }
     @Synchronized
     public int likeArticle(long articleId, long userId) {
+        verifyArticleId(articleId<=0, "Not found Article");
         Article article = getArticleById(articleId);
         User user = getUserById(userId);
         if (user.getLikedComments().contains(article)) {
@@ -92,6 +91,7 @@ public class ArticleService {
 
     @Synchronized
     public int dislikeArticle(long articleId, long userId) {
+        verifyArticleId(articleId<=0, "Not found Article");
         Article article = getArticleById(articleId);
         User user = getUserById(userId);
         if (user.getDislikedArticles().contains(article)) {
@@ -140,10 +140,9 @@ public class ArticleService {
     }
 
     public ArticleWithoutUserDTO getById(long articleId) {
+        verifyArticleId(articleId<=0, "Not found Article");
         Optional<Article> opt=articleRepository.findById(articleId);
-        if(!opt.isPresent()){
-            throw new NotFoundException("The article not found");
-        }
+        verifyArticleId(!opt.isPresent(), "The article not found");
         Article article=opt.get();
         Object object=new Object();
         synchronized (object){
@@ -156,10 +155,9 @@ public class ArticleService {
         return articleWithoutUserDTO;
     }
     public ArticleWithoutUserDTO deleteById(long articleId) {
+        verifyArticleId(articleId <= 0, "Not found Article");
         Optional<Article>opt=articleRepository.findById(articleId);
-        if(!opt.isPresent()){
-            throw new NotFoundException("The article not found");
-        }
+        verifyArticleId(!opt.isPresent(), "The article not found");
         Article article=opt.get();
         CategoryWithoutArticleDTO categoryWithoutArticleDTO=new CategoryWithoutArticleDTO(article.getCategory_id());
         ArticleWithoutUserDTO articleWithoutUserDTO=new ArticleWithoutUserDTO(article);
@@ -168,11 +166,15 @@ public class ArticleService {
         return articleWithoutUserDTO;
     }
 
+    private void verifyArticleId(boolean b, String s) {
+        if (b) {
+            throw new NotFoundException(s);
+        }
+    }
+
     public ArticleResponseDTO editArticle(ArticleEditDTO articleDTO, Long attribute) {
       Optional<Article> opt =articleRepository.findById(articleDTO.getId());
-      if(!opt.isPresent()){
-          throw  new NotFoundException("Not found article to edit");
-      }
+      verifyArticleId(!opt.isPresent(), "Not found article to edit");
       Article article = opt.get();
       article.setTitle(articleDTO.getTitle());
       article.setContent(articleDTO.getContent());

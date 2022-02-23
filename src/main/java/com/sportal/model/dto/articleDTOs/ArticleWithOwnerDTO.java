@@ -3,7 +3,6 @@ package com.sportal.model.dto.articleDTOs;
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.dto.userDTOs.UserWithoutArticlesDTO;
 import com.sportal.model.pojo.Article;
-import com.sportal.model.pojo.Category;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,16 +29,24 @@ public class ArticleWithOwnerDTO {
 
     private CategoryWithoutArticleDTO category;
 
-    public ArticleWithOwnerDTO(Article art,UserWithoutArticlesDTO owner, CategoryWithoutArticleDTO category) {
-        this.id = art.getId();
-        this.title = art.getTitle();
-        this.content = art.getContent();
-        this.created_at = art.getCreated_at();
-        this.updated_at = art.getUpdated_at();
-        this.views = art.getViews();
+    private String picUrl;
+
+    private String videoUrl;
+
+    public ArticleWithOwnerDTO(Article article, UserWithoutArticlesDTO owner, CategoryWithoutArticleDTO category) {
+        this.id = article.getId();
+        this.title = article.getTitle();
+        this.content = article.getContent();
+        this.created_at = article.getCreated_at();
+        this.updated_at = article.getUpdated_at();
+        this.views = article.getViews();
         this.owner = owner;
         this.category = category;
+        if(article.getArticleImages()!=null){
+            this.picUrl= article.getArticleImages().getPic_url();
+        }
+        if(article.getVideo().getVideo_url()!=null){
+            this.videoUrl= article.getVideo().getVideo_url();
+        }
     }
-
-//private CommentsWithOutUserAndWithoutArticlesDTO comments;
 }
