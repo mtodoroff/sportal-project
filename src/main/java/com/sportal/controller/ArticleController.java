@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class ArticleController {
@@ -70,6 +71,7 @@ public class ArticleController {
     public ArticleWithoutUserDTO deleteById(@PathVariable long articleId, HttpSession session, HttpServletRequest request){
         User user =sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
+
         return articleService.deleteById(articleId);
     }
 

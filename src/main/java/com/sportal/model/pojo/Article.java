@@ -30,14 +30,20 @@ public class Article extends BasePojo{
     @ManyToOne
     @JoinColumn(name="author_id")
     private User user;
+
     @ManyToOne
     @JoinColumn(name="category_id")
     private Category category_id;
+
     @OneToMany(mappedBy = "article")
     private List<Comment> comments;
 
     @OneToOne(mappedBy = "article_id")
     private Picture articleImages;
+
+
+    @OneToOne(mappedBy = "article")
+    private Video video;
 
     @ManyToMany
     @JoinTable(
