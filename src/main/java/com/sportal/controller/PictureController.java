@@ -1,9 +1,7 @@
 package com.sportal.controller;
 
-import com.sportal.model.dto.imageDTOs.DeleteImageRequestDTO;
-import com.sportal.model.dto.imageDTOs.DeleteImageResponseDTO;
+import com.sportal.model.dto.imageDTOs.DeleteImageDTO;
 import com.sportal.model.dto.imageDTOs.ImageUploadDTO;
-import com.sportal.model.dto.userDTOs.UserRegisterRequestDTO;
 import com.sportal.model.pojo.User;
 import com.sportal.service.PictureService;
 import com.sportal.service.SessionService;
@@ -35,9 +33,10 @@ public class PictureController {
     }
 
     @DeleteMapping("/images")
-    public ResponseEntity<DeleteImageResponseDTO> deleteImage(@RequestBody DeleteImageRequestDTO deleteRq, HttpSession ses){
+    public ResponseEntity<String> deleteImage(@RequestBody DeleteImageDTO deleteRq, HttpSession ses){
         User loggedUser = sessionService.getLoggedUser(ses);
         sessionService.validateAdmin(loggedUser);
-        return new ResponseEntity(pictureService.deleteImage(deleteRq.getId()),HttpStatus.OK);
+        pictureService.deleteImage(deleteRq.getId());
+        return ResponseEntity.ok().body("\"message\": \"Image deleted successfully.\"");
     }
 }

@@ -11,25 +11,30 @@ import com.sportal.model.pojo.Category;
 import com.sportal.model.pojo.Comment;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.UserRepository;
+import com.sportal.util.PasswordBuilder;
 import com.sportal.util.Validator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
+    @Autowired
+    private JavaMailSender emailSender;
+
 
     public UserRegisterResponseDTO registerUser(UserRegisterRequestDTO userDTO) {
         Validator.validateEmail(userDTO.getEmail());
@@ -91,17 +96,17 @@ public class UserService {
     }
 
     @Transactional
-    public void changePassword(UserChangePasswordRequest userChangePasswordRequest) {
-        User user = userRepository.findById(userChangePasswordRequest.getId()).orElseThrow(()-> new NotFoundException("User not found!"));
+    public void changePassword(UserChangePasswordRequestDTO userChangePasswordRequestDTO) {
+        User user = userRepository.findById(userChangePasswordRequestDTO.getId()).orElseThrow(()-> new NotFoundException("User not found!"));
 
-        if (!passwordEncoder.matches(userChangePasswordRequest.getOldPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(userChangePasswordRequestDTO.getOldPassword(), user.getPassword())) {
             throw new BadRequestException("Please provide valid password");
         }
-        if (!userChangePasswordRequest.getNewPassword().equals(userChangePasswordRequest.getConfirmNewPassword())) {
+        if (!userChangePasswordRequestDTO.getNewPassword().equals(userChangePasswordRequestDTO.getConfirmNewPassword())) {
             throw new BadRequestException("Please provide valid conf password");
         }
         String oldPassword = user.getPassword();
-        String newPassword = userChangePasswordRequest.getNewPassword();
+        String newPassword = userChangePasswordRequestDTO.getNewPassword();
         Validator.validatePassword(newPassword);
         if (passwordEncoder.matches(newPassword, oldPassword)) {
             throw new BadRequestException("New password must be different from the old.");
@@ -147,5 +152,19 @@ public class UserService {
         User user = userRepository.getById(id);
         List<Comment> comments = user.getComments();
         return comments;
+    }
+
+    public void resetPassword(long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BadRequestException("Please provide valid email!"));
+        String newPassword = PasswordBuilder.generatePassword(20);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        SimpleMailMessage message = new SimpleMailMessage();
+        String msg = "Hello "+ user.getUsername() + "\n" + "Your new password is: " + newPassword;
+        message.setTo(user.getEmail());
+        message.setSubject("Sprotal Password change");
+        message.setText(msg);
+        emailSender.send(message);
     }
 }

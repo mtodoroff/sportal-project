@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Setter
 @NoArgsConstructor
 @Component
-public class UserChangePasswordRequest {
+public class UserChangePasswordRequestDTO {
     private long id;
     private String oldPassword;
     private String newPassword;

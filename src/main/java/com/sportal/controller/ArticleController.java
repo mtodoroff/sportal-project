@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/search")
-    public List<ArticleWithOwnerDTO> searchByTitle(@RequestParam(value = "title") String title){
+    public List<ArticleWithUserDTO> searchByTitle(@RequestParam(value = "title") String title){
         return articleService.searchByTitle(title);
     }
 
