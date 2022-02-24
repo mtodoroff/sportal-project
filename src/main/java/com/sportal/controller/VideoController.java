@@ -37,14 +37,16 @@ public class VideoController {
 
         File f=new File("uploads"+File.separator+video);
         if(!f.exists()){
-            throw new NotFoundException("File does not exist");
+            throw new NotFoundException("File doesn't exist");
         }
         Files.copy(f.toPath(),response.getOutputStream());
     }
-//    @DeleteMapping("articles/{videoId}")
-//    public ResponseEntity<DeleteVideoResponseDTO>deleteVideoById(@RequestParam(value = "videoId") Long videoId,HttpServletRequest request){
-//        User user  = sessionService.getLoggedUser(request.getSession());
-//        sessionService.validateAdmin(user);
-//        return videoService.deleteById(videoId);
-//    }
+
+    @DeleteMapping("/video/{videoId}")
+    public ResponseEntity<DeleteVideoResponseDTO>deleteVideoById(@PathVariable(value = "videoId") Long videoId,HttpServletRequest request){
+        User user  = sessionService.getLoggedUser(request.getSession());
+        sessionService.validateAdmin(user);
+        return videoService.deleteById(videoId);
+    }
+
 }
