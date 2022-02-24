@@ -25,7 +25,6 @@ ArticleRepository articleRepository;
         try (OutputStream os = new FileOutputStream(picFile)) {
             os.write(file.getBytes());
             Picture picture = new Picture();
-
             Optional<Article> opt = articleRepository.findById(imageUploadDTO.getId());
             if(!opt.isPresent()){
                 throw new NotFoundException("Not found article");

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Setter
 @Getter
 @NoArgsConstructor
-public class DeleteImageResponseDTO {
+public class DeleteImageDTO {
     private long id;
-
 }

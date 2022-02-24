@@ -10,12 +10,10 @@ import com.sportal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.util.List;
 
 
@@ -87,12 +85,20 @@ public class UserController {
     }
 
     @PatchMapping("/users/change-password")
-    public ResponseEntity<String> changePassword(@RequestBody UserChangePasswordRequest userChangePasswordRequest, HttpSession session, HttpServletRequest request) {
+    public ResponseEntity<String> changePassword(@RequestBody UserChangePasswordRequestDTO userChangePasswordRequestDTO, HttpSession session, HttpServletRequest request) {
         if (!sessionService.userAlreadyLogged(session)) {
             throw new BadRequestException("You must be logged in!");
         }
-
-        userService.changePassword(userChangePasswordRequest);
+        User loggedUser = sessionService.getLoggedUser(session);
+        if (loggedUser.getId() != userChangePasswordRequestDTO.getId()){
+            throw new BadRequestException("You have permission to change only your password");
+        }
+        userService.changePassword(userChangePasswordRequestDTO);
         return ResponseEntity.ok().body("Password was changed successfully.");
+    }
+
+    @PutMapping("/users/reset-password/{id}")
+    public void resetPassword(@PathVariable long id){
+        userService.resetPassword(id);
     }
 }

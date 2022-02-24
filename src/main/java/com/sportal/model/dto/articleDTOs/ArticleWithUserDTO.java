@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ArticleWithOwnerDTO {
+public class ArticleWithUserDTO {
 
     private long id;
 
@@ -36,7 +36,7 @@ public class ArticleWithOwnerDTO {
 
     private String videoUrl;
 
-    public ArticleWithOwnerDTO(Article article, UserWithoutArticlesDTO owner, CategoryWithoutArticleDTO category) {
+    public ArticleWithUserDTO(Article article, UserWithoutArticlesDTO owner, CategoryWithoutArticleDTO category) {
         this.id = article.getId();
         this.title = article.getTitle();
         this.content = article.getContent();

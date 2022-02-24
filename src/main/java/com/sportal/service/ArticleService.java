@@ -59,16 +59,16 @@ public class ArticleService {
         }
     }
 
-    public List<ArticleWithOwnerDTO> searchByTitle(String title) {
+    public List<ArticleWithUserDTO> searchByTitle(String title) {
         if (title.trim().isEmpty()) {
             throw new NotFoundException("Not found Article with name" + title);
         }
         List<Article> art = articleRepository.findByTitleUsingLike(title);
         verifyArticleId(art == null, "Article not found");
-        List<ArticleWithOwnerDTO> articleWithOwnerDTOS = new ArrayList<>();
+        List<ArticleWithUserDTO> articleWithOwnerDTOS = new ArrayList<>();
         for (Article a : art) {
             CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(a.getCategory_id());
-            ArticleWithOwnerDTO current = new ArticleWithOwnerDTO(a, map.map(a.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
+            ArticleWithUserDTO current = new ArticleWithUserDTO(a, map.map(a.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
             articleWithOwnerDTOS.add(current);
         }
         return articleWithOwnerDTOS;
