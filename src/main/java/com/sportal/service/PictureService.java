@@ -17,14 +17,20 @@ public class PictureService {
 
     @Autowired
     private PictureRepository pictureRepository;
-
+@Autowired
+ArticleRepository articleRepository;
 
     public Picture uploadImage(String filePath, MultipartFile file, ImageUploadDTO imageUploadDTO) {
         File picFile = new File(filePath + File.separator + "_" + System.nanoTime() + ".png");
         try (OutputStream os = new FileOutputStream(picFile)) {
             os.write(file.getBytes());
             Picture picture = new Picture();
-            Article article = imageUploadDTO.getArticle_id();
+
+            Optional<Article> opt = articleRepository.findById(imageUploadDTO.getId());
+            if(!opt.isPresent()){
+                throw new NotFoundException("Not found article");
+            }
+            Article article =opt.get();
             picture.setPic_url(picFile.getAbsolutePath());
             picture.setArticle_id(article);
             picture = pictureRepository.save(picture);
