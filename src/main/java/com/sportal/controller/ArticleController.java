@@ -45,6 +45,11 @@ public class ArticleController {
         return articleService.getTopFiveMostViewed();
     }
 
+    @GetMapping("/")
+    public List<ArticleWithoutUserDTO> mainPage(){
+        return articleService.getTopFiveMostViewed();
+    }
+
     @GetMapping("/articles/latest")
     public List<ArticleWithoutUserDTO> latestArticles(){
         return articleService.latestArticles();
