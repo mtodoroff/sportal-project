@@ -1,6 +1,7 @@
 package com.sportal.model.pojo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,22 +42,28 @@ public class User extends BasePojo{
     @Column(name = "updated_at")
     private LocalDateTime updated_at;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference
     private Set<Article> articles;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Comment> comments;
 
-    @ManyToMany(mappedBy = "likers",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "likers")
+    @JsonManagedReference
     private Set<Comment> likedComments;
 
-    @ManyToMany(mappedBy = "dislikers",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "dislikers")
+    @JsonManagedReference
     private Set<Comment> dislikedComments;
 
-    @ManyToMany(mappedBy = "likedArticles",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "likedArticles")
+    @JsonManagedReference
     private Set<Article> likedArticles;
 
-    @ManyToMany(mappedBy = "dislikedArticles",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "dislikedArticles")
+    @JsonManagedReference
     private Set<Article> dislikedArticles;
 
     public User(UserRegisterRequestDTO userDTO){

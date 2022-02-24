@@ -2,6 +2,7 @@ package com.sportal.model.dto.articleDTOs;
 
 import com.sportal.model.dto.commentDTOs.CommentResponseDTO;
 import com.sportal.model.pojo.Article;
+import com.sportal.model.pojo.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,13 +19,13 @@ public class ArticleResponseDTO {
     private String title;
     private String content;
     private long views;
-    private List<CommentResponseDTO> comments;
+    private List<Comment> comments;
 
     public ArticleResponseDTO(Article article){
         this.id = article.getId();
         this.title = article.getTitle();
         this.content = article.getContent();
         this.views = article.getViews();
-        this.comments = new ArrayList<>();
+        this.comments = article.getComments();
     }
 }

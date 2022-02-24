@@ -1,5 +1,6 @@
 package com.sportal.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,5 +18,6 @@ public class Video extends BasePojo{
     private String video_url;
     @OneToOne
     @JoinColumn(name = "article_id")
+    @JsonBackReference
     private Article article;
 }

@@ -28,7 +28,7 @@ public class PictureService {
             Picture picture = new Picture();
             Optional<Article> opt = articleRepository.findById(imageUploadDTO.getId());
             if(!opt.isPresent()){
-                throw new NotFoundException("Not found article");
+                throw new NotFoundException("Article not found");
             }
             Article article =opt.get();
             picture.setPic_url(picFile.getAbsolutePath());

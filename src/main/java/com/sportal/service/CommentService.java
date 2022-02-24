@@ -12,6 +12,7 @@ import com.sportal.model.pojo.User;
 import com.sportal.model.repository.ArticleRepository;
 import com.sportal.model.repository.CommentRepository;
 import com.sportal.model.repository.UserRepository;
+import com.sportal.util.CensoredWords;
 import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,9 @@ public class CommentService {
 
     public ArticleResponseDTO addComment(User user, CommentAddRequestDTO addedComment){
         Article article = getArticleById(addedComment.getArticle_id());
-        Comment comment = new Comment(addedComment.getComment_text(),article,user);
+        String commentText = addedComment.getComment_text();
+        commentText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
+        Comment comment = new Comment(commentText,article,user);
         commentRepository.save(comment);
         return new ArticleResponseDTO(article);
     }
@@ -61,6 +64,7 @@ public class CommentService {
     public ArticleResponseDTO editComment(CommentEditRequestDTO editedComment) {
         Comment comment = getCommentById(editedComment.getId());
         String text = editedComment.getComment_text();
+        text = text.replaceAll(CensoredWords.getRegexCensorship(),"******");
         if (text.isEmpty()){
             throw new BadRequestException("Text cannot be empty!");
         }

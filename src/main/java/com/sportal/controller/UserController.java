@@ -45,7 +45,6 @@ public class UserController {
         sessionService.validateAdmin(user);
         return ResponseEntity.ok(userService.getUserComments(id));
     }
-    
 
     @PostMapping("/users/register")
     public ResponseEntity<UserRegisterResponseDTO> register(@RequestBody UserRegisterRequestDTO userDTO) {

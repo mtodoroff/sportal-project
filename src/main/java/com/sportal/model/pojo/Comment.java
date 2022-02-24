@@ -30,10 +30,12 @@ public class Comment extends BasePojo{
 
     @ManyToOne
     @JoinColumn(name = "article_id")
+    @JsonBackReference
     private Article article;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @JsonBackReference
@@ -46,6 +48,7 @@ public class Comment extends BasePojo{
     private List<Comment> replies;
 
     @ManyToMany
+    @JsonBackReference
     @JoinTable(
             name = "users_like_comments",
             joinColumns = @JoinColumn(name = "comment_id"),
@@ -53,6 +56,7 @@ public class Comment extends BasePojo{
     private Set<User> likers;
 
     @ManyToMany
+    @JsonBackReference
     @JoinTable(
             name = "users_dislike_comments",
             joinColumns = @JoinColumn(name = "comment_id"),

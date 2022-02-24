@@ -32,11 +32,11 @@ public class PictureController {
         return new ResponseEntity(pictureService.uploadImage(filePath, file,imageUploadDTO), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/images")
-    public ResponseEntity<String> deleteImage(@RequestBody DeleteImageDTO deleteRq, HttpSession ses){
+    @DeleteMapping("/images/{id}")
+    public ResponseEntity<String> deleteImage(@PathVariable long id, HttpSession ses){
         User loggedUser = sessionService.getLoggedUser(ses);
         sessionService.validateAdmin(loggedUser);
-        pictureService.deleteImage(deleteRq.getId());
+        pictureService.deleteImage(id);
         return ResponseEntity.ok().body("\"message\": \"Image deleted successfully.\"");
     }
 }

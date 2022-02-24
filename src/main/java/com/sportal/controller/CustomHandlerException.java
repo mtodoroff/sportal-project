@@ -18,7 +18,10 @@ import java.time.LocalDateTime;
 public class CustomHandlerException extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({UnauthorizedException.class,AuthenticationException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
     public ResponseEntity<ErrorDTO> handleUnauthorized(Exception e){
+
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setStatus(HttpStatus.UNAUTHORIZED);
         errorDTO.setMsg(e.getMessage());
@@ -27,6 +30,8 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
     public ResponseEntity<ErrorDTO> handleBadRequest(Exception e){
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setStatus(HttpStatus.BAD_REQUEST);
@@ -37,6 +42,8 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
     public ResponseEntity<ErrorDTO> handleNotFound(Exception e){
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setStatus(HttpStatus.NOT_FOUND);
@@ -47,6 +54,8 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
     public ResponseEntity<ErrorDTO> handleOtherExceptions(Exception e){
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -56,6 +65,8 @@ public class CustomHandlerException extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @ExceptionHandler(InvalidArticle.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
     public ResponseEntity<ErrorDTO> handleInvalidArticle(Exception e) {
         ErrorDTO errorDTO = new ErrorDTO();
         errorDTO.setStatus(HttpStatus.BAD_REQUEST);

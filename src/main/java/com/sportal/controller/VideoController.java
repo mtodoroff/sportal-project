@@ -41,10 +41,12 @@ public class VideoController {
         }
         Files.copy(f.toPath(),response.getOutputStream());
     }
+
     @DeleteMapping("/video/{videoId}")
     public ResponseEntity<DeleteVideoResponseDTO>deleteVideoById(@PathVariable(value = "videoId") Long videoId,HttpServletRequest request){
         User user  = sessionService.getLoggedUser(request.getSession());
         sessionService.validateAdmin(user);
         return videoService.deleteById(videoId);
     }
+
 }
