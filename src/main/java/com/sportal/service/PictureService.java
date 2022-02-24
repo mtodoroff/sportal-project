@@ -24,7 +24,7 @@ public class PictureService {
         try (OutputStream os = new FileOutputStream(picFile)) {
             os.write(file.getBytes());
             Picture picture = new Picture();
-            Article article = imageUploadDTO.getArticle_id();
+            picture.setArticle_id(imageUploadDTO.getArticle());
             picture.setPic_url(picFile.getAbsolutePath());
             picture.setArticle_id(article);
             picture = pictureRepository.save(picture);

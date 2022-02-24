@@ -1,5 +1,6 @@
 package com.sportal.model.dto.imageDTOs;
 
+import com.sportal.model.dto.articleDTOs.ArticleForPictureDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Picture;
 import lombok.Getter;
@@ -13,10 +14,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImageUploadDTO {
     private long id;
-    private Article article_id;
+    private ArticleForPictureDTO article;
 
     public ImageUploadDTO(Picture picture) {
         this.id = picture.getId();
-        this.article_id = picture.getArticle_id();
+        this.article.setId(picture.getArticle_id().getId());
+        this.article.setTitle(picture.getArticle_id().getTitle());
+        this.article.setContent(picture.getArticle_id().getContent());
     }
 }

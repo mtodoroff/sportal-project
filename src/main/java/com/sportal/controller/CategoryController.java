@@ -3,6 +3,7 @@ package com.sportal.controller;
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.pojo.Category;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.CategoryRepository;
@@ -32,12 +33,15 @@ public class CategoryController {
     CategoryRepository categoryRepository;
 
     @PostMapping("/categories")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category, HttpSession session) {
+    public ResponseEntity<CategoryWithoutArticleDTO> addCategory(@RequestBody Category category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         Category c = categoryService.createCategory(category);
-        return new ResponseEntity(c, HttpStatus.CREATED);
+        CategoryWithoutArticleDTO dto=new CategoryWithoutArticleDTO();
+        dto.setCategory(category.getCategory());
+        return new ResponseEntity(dto, HttpStatus.CREATED);
     }
+
     @GetMapping("/categories")
     public List<CategoryWithArticlesDTO> getAllCategory() {
         return categoryService.findAllArticles();
@@ -52,14 +56,14 @@ public class CategoryController {
     }
 
     @PutMapping("/categories")
-    public ResponseEntity<Category> edit(@RequestBody Category category, HttpSession session) {
+    public ResponseEntity<CategoryWithoutArticleDTO> edit(@RequestBody Category category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         Optional<Category> opt = categoryRepository.findById(category.getId());
         if (!opt.isPresent()) {
             throw new NotFoundException("Category not found");
         }
-        Category currentCategory = opt.get();
+        CategoryWithoutArticleDTO currentCategory = new CategoryWithoutArticleDTO();
         currentCategory.setCategory(category.getCategory());
         categoryRepository.save(category);
         return ResponseEntity.ok(currentCategory);
