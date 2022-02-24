@@ -32,8 +32,9 @@ public class ArticleWithoutUserDTO {
 
     private String videoUrl;
 
-    private CategoryWithoutArticleDTO category;
+    private CategoryWithoutArticleDTO category
 
+    
     public ArticleWithoutUserDTO(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();

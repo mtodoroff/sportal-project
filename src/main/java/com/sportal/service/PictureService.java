@@ -1,6 +1,7 @@
 package com.sportal.service;
 
 import com.sportal.exceptions.NotFoundException;
+import com.sportal.model.dto.articleDTOs.ArticleForPictureDTO;
 import com.sportal.model.dto.imageDTOs.ImageUploadDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Picture;
@@ -17,10 +18,10 @@ public class PictureService {
 
     @Autowired
     private PictureRepository pictureRepository;
-@Autowired
-ArticleRepository articleRepository;
+    @Autowired
+    ArticleRepository articleRepository;
 
-    public Picture uploadImage(String filePath, MultipartFile file, ImageUploadDTO imageUploadDTO) {
+    public ArticleForPictureDTO uploadImage(String filePath, MultipartFile file, ImageUploadDTO imageUploadDTO) {
         File picFile = new File(filePath + File.separator + "_" + System.nanoTime() + ".png");
         try (OutputStream os = new FileOutputStream(picFile)) {
             os.write(file.getBytes());
@@ -33,8 +34,10 @@ ArticleRepository articleRepository;
             picture.setPic_url(picFile.getAbsolutePath());
             picture.setArticle_id(article);
             picture = pictureRepository.save(picture);
+            ArticleForPictureDTO dto=new ArticleForPictureDTO(picture);
+            //TODO what is
             pictureRepository.findById(picture.getId());
-            return picture;
+            return dto;
         } catch (FileNotFoundException e) {
             throw new NotFoundException("No files to upload" + e.getMessage());
         } catch (IOException e) {
