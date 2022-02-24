@@ -1,5 +1,7 @@
 package com.sportal.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sportal.model.dto.articleDTOs.AddArticleDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,7 @@ public class Article extends BasePojo{
     private long views;
     @ManyToOne
     @JoinColumn(name="author_id")
+    @JsonManagedReference
     private User user;
 
     @ManyToOne
@@ -39,10 +42,12 @@ public class Article extends BasePojo{
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "article_id")
+    @JsonManagedReference
     private Set<Picture> articleImages;
 
 
     @OneToOne(mappedBy = "article")
+    @JsonManagedReference
     private Video video;
 
     @ManyToMany
@@ -50,6 +55,7 @@ public class Article extends BasePojo{
             name = "users_like_articles",
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonBackReference
     private Set<User> likedArticles;
 
     @ManyToMany
@@ -57,6 +63,7 @@ public class Article extends BasePojo{
             name = "users_dislike_articles",
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JsonBackReference
     private Set<User> dislikedArticles;
 
     public Article(AddArticleDTO article, User user){

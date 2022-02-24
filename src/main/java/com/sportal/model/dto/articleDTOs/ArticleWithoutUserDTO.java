@@ -3,11 +3,13 @@ package com.sportal.model.dto.articleDTOs;
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Category;
+import com.sportal.model.pojo.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,6 +36,8 @@ public class ArticleWithoutUserDTO {
 
     private CategoryWithoutArticleDTO category;
 
+    private List<Comment> comments;
+
     public ArticleWithoutUserDTO(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();
@@ -48,5 +52,6 @@ public class ArticleWithoutUserDTO {
         if(article.getVideo()!=null){
             this.videoUrl=article.getVideo().getVideo_url();
         }
+        this.comments = article.getComments();
     }
 }

@@ -41,10 +41,10 @@ public class VideoController {
         }
         Files.copy(f.toPath(),response.getOutputStream());
     }
-    @DeleteMapping("articles/{videoId}")
-    public ResponseEntity<DeleteVideoResponseDTO>deleteVideoById(@RequestParam(value = "videoId") Long videoId,HttpServletRequest request){
-        User user  = sessionService.getLoggedUser(request.getSession());
-        sessionService.validateAdmin(user);
-        return videoService.deleteById(videoId);
-    }
+//    @DeleteMapping("articles/{videoId}")
+//    public ResponseEntity<DeleteVideoResponseDTO>deleteVideoById(@RequestParam(value = "videoId") Long videoId,HttpServletRequest request){
+//        User user  = sessionService.getLoggedUser(request.getSession());
+//        sessionService.validateAdmin(user);
+//        return videoService.deleteById(videoId);
+//    }
 }

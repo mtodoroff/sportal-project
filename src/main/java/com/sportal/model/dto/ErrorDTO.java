@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ErrorDTO extends RuntimeException{
+public class ErrorDTO {
     private HttpStatus status;
     private String msg;
     private LocalDateTime dateTime;

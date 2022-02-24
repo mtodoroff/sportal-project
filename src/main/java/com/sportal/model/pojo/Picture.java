@@ -19,6 +19,7 @@ public class Picture extends BasePojo{
     private String pic_url;
     @ManyToOne
     @JoinColumn(name="article_id")
+    @JsonBackReference
     private Article article_id;
 
 }

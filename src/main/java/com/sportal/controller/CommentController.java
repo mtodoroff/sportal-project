@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -34,8 +33,14 @@ public class CommentController {
     }
 
     @DeleteMapping("/comments/{id}")
-    public ResponseEntity<String> deleteComment(@PathVariable long id){
-        commentService.deleteComment(id);
+    public ResponseEntity<String> deleteComment(@PathVariable long id,HttpSession session){
+        User loggedUser = sessionService.getLoggedUser(session);
+        if(commentService.userOwnsComment(loggedUser.getId(), id)){
+             commentService.deleteComment(id);
+        }
+        else{
+            throw new BadRequestException("Only the owner of the comment can delete it");
+        }
         return ResponseEntity.ok().body("\"message\": \"Comment deleted successfully.\"");
     }
 
@@ -49,7 +54,6 @@ public class CommentController {
             throw new BadRequestException("Only the owner of the comment can edit it");
         }
     }
-
 
     @PostMapping("/comments/{id}/like")
     public int likePost(@PathVariable long id, HttpSession session){
