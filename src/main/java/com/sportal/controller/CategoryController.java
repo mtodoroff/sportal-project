@@ -39,13 +39,15 @@ public class CategoryController {
     CategoryRepository categoryRepository;
 
     @PostMapping("/categories")
-    public ResponseEntity<Category> addCategory(@RequestBody Category category, HttpSession session) {
+    public ResponseEntity<CategoryWithoutArticleDTO> addCategory(@RequestBody Category category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         Category c = categoryService.createCategory(category);
-        return new ResponseEntity(c, HttpStatus.CREATED);
+        CategoryWithoutArticleDTO dto=new CategoryWithoutArticleDTO();
+        dto.setCategory(category.getCategory());
+        return new ResponseEntity(dto, HttpStatus.CREATED);
     }
-    //TODO Remove circular JSON
+
     @GetMapping("/categories")
     public List<CategoryWithArticlesDTO> getAllCategory() {
         return categoryService.findAllArticles();
@@ -61,14 +63,14 @@ public class CategoryController {
 
     @PutMapping("/categories")
     @Validated
-    public ResponseEntity<Category> edit(@Valid @RequestBody Category category, HttpSession session) {
+    public ResponseEntity<CategoryWithoutArticleDTO> edit(@Valid @RequestBody Category category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         Optional<Category> opt = categoryRepository.findById(category.getId());
         if (!opt.isPresent()) {
             throw new NotFoundException("Category not found");
         }
-        Category currentCategory = opt.get();
+        CategoryWithoutArticleDTO currentCategory = new CategoryWithoutArticleDTO();
         currentCategory.setCategory(category.getCategory());
         categoryRepository.save(category);
         return ResponseEntity.ok(currentCategory);

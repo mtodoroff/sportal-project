@@ -130,7 +130,6 @@ public class ArticleService {
         return latestArticles;
     }
 
-    //TODO Add User Article and Category to global Service
     private User getUserById(long id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
