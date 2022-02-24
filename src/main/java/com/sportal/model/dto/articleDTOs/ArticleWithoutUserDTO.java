@@ -34,7 +34,7 @@ public class ArticleWithoutUserDTO {
 
     private CategoryWithoutArticleDTO category;
 
-    
+
     public ArticleWithoutUserDTO(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();
