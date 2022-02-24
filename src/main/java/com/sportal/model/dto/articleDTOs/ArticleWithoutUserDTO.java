@@ -32,7 +32,7 @@ public class ArticleWithoutUserDTO {
 
     private String videoUrl;
 
-    private CategoryWithoutArticleDTO category
+    private CategoryWithoutArticleDTO category;
 
     
     public ArticleWithoutUserDTO(Article article) {
