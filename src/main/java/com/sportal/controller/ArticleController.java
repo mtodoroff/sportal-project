@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 public class ArticleController {
@@ -23,23 +22,23 @@ public class ArticleController {
 
 
     @PostMapping("/articles/add")
-        public ResponseEntity<ArticleResponseDTO> add(@RequestBody AddArticleDTO article, HttpSession session, HttpServletRequest request) {
+        public ResponseEntity<ArticleResponseDTO> add(@RequestBody AddArticleDTO article, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         return ResponseEntity.ok(articleService.addArticle(article,(Long)session.getAttribute(SessionService.USER_ID)));
     }
+
     @PutMapping("/articles/edit")
-    public ResponseEntity<ArticleResponseDTO>editArticle(@RequestBody ArticleEditDTO articleDTO, HttpSession session, HttpServletRequest request){
+    public ResponseEntity<ArticleResponseDTO>editArticle(@RequestBody ArticleEditDTO articleDTO, HttpSession session){
         User user =sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         return ResponseEntity.ok(articleService.editArticle(articleDTO,(Long)session.getAttribute(SessionService.USER_ID)));
     }
 
     @GetMapping("/articles/search")
-    public List<ArticleWithOwnerDTO> getByTitle(@RequestParam(value = "title") String title){
-        return articleService.getByTitle(title);
+    public List<ArticleWithOwnerDTO> searchByTitle(@RequestParam(value = "title") String title){
+        return articleService.searchByTitle(title);
     }
-
 
     @GetMapping("/articles/top5")
     public List<ArticleWithoutUserDTO> topFiveMostViewedArticles(){
@@ -63,12 +62,14 @@ public class ArticleController {
         User loggedUser = sessionService.getLoggedUser(session);
         return articleService.dislikeArticle(id,loggedUser.getId());
     }
-    @GetMapping("/articles/get/{articleId}")
+
+    @GetMapping("/articles/{articleId}")
     public ArticleWithoutUserDTO getById(@PathVariable long articleId){
         return articleService.getById(articleId);
     }
-    @DeleteMapping("/articles/delete/{articleId}")
-    public ArticleWithoutUserDTO deleteById(@PathVariable long articleId, HttpSession session, HttpServletRequest request){
+
+    @DeleteMapping("/articles/{articleId}")
+    public ArticleWithoutUserDTO deleteById(@PathVariable long articleId, HttpSession session){
         User user =sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         return articleService.deleteById(articleId);

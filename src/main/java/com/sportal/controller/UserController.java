@@ -2,6 +2,7 @@ package com.sportal.controller;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.model.dto.userDTOs.*;
+import com.sportal.model.pojo.Comment;
 import com.sportal.model.pojo.User;
 import com.sportal.service.SessionService;
 
@@ -40,6 +41,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
+    @GetMapping("/users/{id}/comments")
+    public ResponseEntity<List<Comment>> getUserComments(@PathVariable long id, HttpSession session) {
+        User user  = sessionService.getLoggedUser(session);
+        sessionService.validateAdmin(user);
+        return ResponseEntity.ok(userService.getUserComments(id));
+    }
+    
 
     @PostMapping("/users/register")
     public ResponseEntity<UserRegisterResponseDTO> register(@RequestBody UserRegisterRequestDTO userDTO) {

@@ -56,6 +56,7 @@ public class CommentService {
         Comment comment = getCommentById(commentId);
         commentRepository.delete(comment);
     }
+
     @Transactional
     public ArticleResponseDTO editComment(CommentEditRequestDTO editedComment) {
         Comment comment = getCommentById(editedComment.getId());
@@ -76,7 +77,7 @@ public class CommentService {
         Comment comment = getCommentById(commentId);
         User user = getUserById(userId);
         if(user.getLikedComments().contains(comment)){
-            throw new BadRequestException("User already liked this comment!");
+            throw new BadRequestException("You already liked this comment!");
         }
         comment.getLikers().add(user);
         if (comment.getDislikers().contains(user)){
@@ -85,12 +86,13 @@ public class CommentService {
         commentRepository.save(comment);
         return comment.getLikers().size();
     }
+
     @Synchronized
     public int dislikeComment(long commentId, long userId) {
         Comment comment = getCommentById(commentId);
         User user = getUserById(userId);
         if(user.getDislikedComments().contains(comment)){
-            throw new BadRequestException("User already disliked this comment!");
+            throw new BadRequestException("You already disliked this comment!");
         }
         comment.getDislikers().add(user);
         if (comment.getLikers().contains(user)){

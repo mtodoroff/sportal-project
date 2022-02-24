@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,7 +32,7 @@ public class ArticleWithOwnerDTO {
 
     private CategoryWithoutArticleDTO category;
 
-    private String picUrl;
+    private Set<String> picUrl;
 
     private String videoUrl;
 
@@ -43,7 +46,7 @@ public class ArticleWithOwnerDTO {
         this.owner = owner;
         this.category = category;
         if(article.getArticleImages()!=null){
-            this.picUrl= article.getArticleImages().getPic_url();
+            this.picUrl=article.getArticleImages().stream().map(e -> e.getPic_url()).collect(Collectors.toSet());
         }
         if(article.getVideo().getVideo_url()!=null){
             this.videoUrl= article.getVideo().getVideo_url();

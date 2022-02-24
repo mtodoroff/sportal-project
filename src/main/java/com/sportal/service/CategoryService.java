@@ -32,7 +32,7 @@ public class CategoryService {
         return cat;
     }
 
-    public List<ArticleWithoutUserDTO> getByCategory(String category) {
+    public List<ArticleWithoutUserDTO> searchByCategory(String category) {
         List<Category> categoryList = categoryRepository.findByCategoryUsingLike(category);
         if (category.trim().isEmpty() || categoryList == null) {
             throw new NotFoundCategory("Category not found");

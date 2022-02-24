@@ -19,7 +19,6 @@ public class SessionService {
     @Autowired
     private UserRepository userRepository;
 
-    // TODO Some methods cover another . It might be ambigious REFACTOR!!!
     public void loginUser(HttpSession session, long id,HttpServletRequest request) {
         session.setAttribute(LOGGED, true);
         session.setAttribute(LOGGED_FROM,request.getRemoteAddr());
@@ -27,20 +26,6 @@ public class SessionService {
     }
     public boolean userAlreadyLogged(HttpSession ses) {
         return ses.getAttribute(LOGGED) != null;
-    }
-    public void validateLogin(HttpSession session,HttpServletRequest request) {
-        if(session.isNew()){
-            throw new UnauthorizedException("You have to login!");
-        }
-        if(!(Boolean) session.getAttribute(SessionService.LOGGED)&&session.getAttribute(SessionService.LOGGED)!=null){
-            throw new UnauthorizedException("You have to login!");
-        }
-        if((Long) session.getAttribute(SessionService.USER_ID)==null){
-            throw new UnauthorizedException("You have to login!");
-        }
-        if(session.getAttribute(SessionService.LOGGED_FROM)!=request.getRemoteAddr()){
-            throw new UnauthorizedException("You have to login!");
-        }
     }
 
     public User getLoggedUser(HttpSession session){
@@ -56,9 +41,8 @@ public class SessionService {
     public void validateAdmin(User u){
         Optional<User> opt=userRepository.findUserByUsername(u.getUsername());
         User user=opt.get();
-
         if(!user.is_admin()){
-          throw new UnauthorizedException("You are not admin");
+          throw new UnauthorizedException("You are not admin!");
      }
     }
 }

@@ -62,8 +62,7 @@ public class CategoryController {
     }
 
     @PutMapping("/categories")
-    @Validated
-    public ResponseEntity<CategoryWithoutArticleDTO> edit(@Valid @RequestBody Category category, HttpSession session) {
+    public ResponseEntity<CategoryWithoutArticleDTO> edit(@RequestBody Category category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         Optional<Category> opt = categoryRepository.findById(category.getId());
@@ -77,8 +76,8 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/search")
-    public List<ArticleWithoutUserDTO>getByCategory(@RequestParam(value = "category") String category){
-       return categoryService.getByCategory(category);
+    public List<ArticleWithoutUserDTO> searchByCategoryName(@RequestParam(value = "category") String category){
+       return categoryService.searchByCategory(category);
     }
 
 }

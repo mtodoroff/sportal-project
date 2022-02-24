@@ -17,7 +17,7 @@ public class Picture extends BasePojo{
 
     @Column
     private String pic_url;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="article_id")
     private Article article_id;
 
