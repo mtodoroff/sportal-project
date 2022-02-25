@@ -38,6 +38,7 @@ public class ArticleWithoutUserDTO {
 
     private List<Comment> comments;
 
+
     public ArticleWithoutUserDTO(Article article) {
         this.id = article.getId();
         this.title = article.getTitle();
