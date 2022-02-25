@@ -37,10 +37,8 @@ public class UserService {
 
 
     public UserRegisterResponseDTO registerUser(UserRegisterRequestDTO userDTO) {
-        Validator.validateEmail(userDTO.getEmail());
-        if (userRepository.findUserByEmail(userDTO.getEmail()) != null) {
-            throw new BadRequestException("Email already exists");
-        }
+        Validator.validateEmptyField(userDTO.getFirst_name(), "First name");
+        Validator.validateEmptyField(userDTO.getLast_name(), "Last name");
         Validator.validateEmptyField(userDTO.getUsername(), "Username");
         if (userRepository.findUserByUsername(userDTO.getUsername()).isPresent()) {
             throw new BadRequestException("Username already exists");
@@ -52,9 +50,11 @@ public class UserService {
         } else {
             throw new BadRequestException("The passwords do not match!");
         }
-        Validator.validateEmptyField(userDTO.getFirst_name(), "First name");
-        Validator.validateEmptyField(userDTO.getLast_name(), "Last name");
         Validator.validatePhone(userDTO.getPhone());
+        Validator.validateEmail(userDTO.getEmail());
+        if (userRepository.findUserByEmail(userDTO.getEmail()) != null) {
+            throw new BadRequestException("Email already exists");
+        }
         userDTO.set_admin(false);
         User user = new User(userDTO);
         user = userRepository.save(user);
