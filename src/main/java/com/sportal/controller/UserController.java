@@ -95,7 +95,7 @@ public class UserController {
         userService.changePassword(userChangePasswordRequestDTO);
         return ResponseEntity.ok().body("Password was changed successfully.");
     }
-
+    //TODO check if email is in DB
     @PutMapping("/users/reset-password/{id}")
     public void resetPassword(@PathVariable long id){
         userService.resetPassword(id);

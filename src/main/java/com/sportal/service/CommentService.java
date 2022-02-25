@@ -13,6 +13,7 @@ import com.sportal.model.repository.ArticleRepository;
 import com.sportal.model.repository.CommentRepository;
 import com.sportal.model.repository.UserRepository;
 import com.sportal.util.CensoredWords;
+import com.sportal.util.Validator;
 import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,9 @@ public class CommentService {
 
     public ArticleResponseDTO addComment(User user, CommentAddRequestDTO addedComment){
         Article article = getArticleById(addedComment.getArticle_id());
+        //TODO extract in method
         String commentText = addedComment.getComment_text();
+        Validator.validateEmptyField(commentText,"Comment");
         commentText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
         Comment comment = new Comment(commentText,article,user);
         commentRepository.save(comment);
@@ -50,7 +53,10 @@ public class CommentService {
     public ArticleResponseDTO addCommentReply(User loggedUser, CommentAddReplyRequestDTO reply) {
         Comment parent = commentRepository.findById(reply.getParent_comment_id()).orElseThrow(() -> new NotFoundException("Comment not found!"));
         Article article = parent.getArticle();
-        Comment comment = new Comment(reply.getComment_text(), article, loggedUser, parent);
+        String commentText = reply.getComment_text();
+        Validator.validateEmptyField(commentText,"Comment");
+        commentText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
+        Comment comment = new Comment(commentText, article, loggedUser, parent);
         commentRepository.save(comment);
         return new ArticleResponseDTO(article);
     }
@@ -63,9 +69,10 @@ public class CommentService {
     @Transactional
     public ArticleResponseDTO editComment(CommentEditRequestDTO editedComment) {
         Comment comment = getCommentById(editedComment.getId());
-        String text = editedComment.getComment_text();
-        text = text.replaceAll(CensoredWords.getRegexCensorship(),"******");
-        if (text.isEmpty()){
+        String commentText = editedComment.getComment_text();
+        Validator.validateEmptyField(commentText,"Comment");
+        commentText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
+        if (commentText.isEmpty()){
             throw new BadRequestException("Text cannot be empty!");
         }
         comment.setCommentText(editedComment.getComment_text());
@@ -117,4 +124,5 @@ public class CommentService {
     private Article getArticleById(long id){
         return articleRepository.findById(id).orElseThrow( ()-> new NotFoundException("Article not found!"));
     }
+
 }
