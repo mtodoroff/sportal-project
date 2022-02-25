@@ -156,7 +156,6 @@ public class ArticleService {
     public ArticleWithoutUserDTO deleteById(long articleId) {
         verifyArticleId(articleId <= 0, "Not found Article");
         Optional<Article>opt=articleRepository.findById(articleId);
-        verifyArticleId(!opt.isPresent(), "The article not found");
         Article article=opt.get();
         CategoryWithoutArticleDTO categoryWithoutArticleDTO=new CategoryWithoutArticleDTO(article.getCategory_id());
         ArticleWithoutUserDTO articleWithoutUserDTO=new ArticleWithoutUserDTO(article);

@@ -38,7 +38,7 @@ public class Article extends BasePojo{
     @JoinColumn(name="category_id")
     private Category category_id;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article",fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "article_id")
