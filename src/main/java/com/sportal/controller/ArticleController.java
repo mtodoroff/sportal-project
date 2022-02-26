@@ -1,12 +1,15 @@
 package com.sportal.controller;
 
 import com.sportal.model.dto.articleDTOs.*;
+import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.User;
 import com.sportal.service.ArticleService;
 import com.sportal.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -35,8 +38,8 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/search")
-    public List<ArticleWithUserDTO> searchByTitle(@RequestParam(value = "title") String title){
-        return articleService.searchByTitle(title);
+    public List<ArticleWithUserDTO> searchByTitle(@RequestParam(value = "pageNumber") int pageNumber,@RequestParam(value = "pageSize") int pageSize){
+        return articleService.searchByTitle(pageNumber,pageSize);
     }
 
     @GetMapping("/articles/top5")

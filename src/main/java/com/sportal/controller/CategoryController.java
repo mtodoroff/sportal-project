@@ -2,6 +2,7 @@ package com.sportal.controller;
 
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryRequestEditDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.pojo.Category;
@@ -55,8 +56,8 @@ public class CategoryController {
         return ResponseEntity.ok().body("\"message\": \"Category removed successfully.\"");
     }
 
-    @PutMapping("/categories")
-    public ResponseEntity<CategoryWithoutArticleDTO> edit(@RequestBody Category category, HttpSession session) {
+    @PostMapping("/categories/edit")
+    public ResponseEntity<CategoryWithoutArticleDTO>edit(@RequestBody CategoryRequestEditDTO category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         Optional<Category> opt = categoryRepository.findById(category.getId());
@@ -64,8 +65,11 @@ public class CategoryController {
             throw new NotFoundException("Category not found");
         }
         CategoryWithoutArticleDTO currentCategory = new CategoryWithoutArticleDTO();
+        Category cat=categoryRepository.findCategoryById(category.getId());
         currentCategory.setCategory(category.getCategory());
-        categoryRepository.save(category);
+        currentCategory.setId(category.getId());
+        cat.setCategory(category.getCategory());
+        categoryRepository.save(cat);
         return ResponseEntity.ok(currentCategory);
     }
 

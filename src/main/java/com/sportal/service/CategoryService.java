@@ -2,16 +2,24 @@ package com.sportal.service;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundCategory;
+import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryRequestEditDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Category;
+import com.sportal.model.pojo.User;
 import com.sportal.model.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Service
@@ -32,6 +40,16 @@ public class CategoryService {
         return cat;
     }
 
+    public CategoryWithoutArticleDTO edit(CategoryRequestEditDTO category) {
+        Category opt = categoryRepository.findById(category.getId()).orElseThrow(()->  new NotFoundException("Category not found"));
+        CategoryWithoutArticleDTO currentCategory = new CategoryWithoutArticleDTO();
+        Category cat=categoryRepository.findCategoryById(category.getId());
+        currentCategory.setCategory(category.getCategory());
+        currentCategory.setId(category.getId());
+        cat.setCategory(category.getCategory());
+        categoryRepository.save(cat);
+        return currentCategory ;
+    }
     public List<ArticleWithoutUserDTO> searchByCategory(String category) {
         List<Category> categoryList = categoryRepository.findByCategoryUsingLike(category);
         if (category.trim().isEmpty() || categoryList == null) {

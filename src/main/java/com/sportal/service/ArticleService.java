@@ -17,6 +17,10 @@ import com.sportal.model.repository.UserRepository;
 import lombok.Synchronized;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -37,7 +41,8 @@ public class ArticleService {
     private CategoryRepository categoryRepository;
     @Autowired
     SessionService sessionService;
-
+    private final static Object object=new Object();
+    
     public ArticleResponseDTO addArticle(AddArticleDTO articleDTO, Long userId) {
         validateArticle(articleDTO);
         User u = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Owner not found"));
@@ -59,17 +64,20 @@ public class ArticleService {
         }
     }
 
-    public List<ArticleWithUserDTO> searchByTitle(String title) {
-        if (title.trim().isEmpty()) {
-            throw new NotFoundException("Not found Article with name" + title);
+    public List<ArticleWithUserDTO> searchByTitle(int pageNumber,int pageSize) {
+        if (pageNumber<0||pageSize<0) {
+            throw new NotFoundException("Not found Article with name");
         }
-        List<Article> art = articleRepository.findByTitleUsingLike(title);
-        verifyArticleId(art == null, "Article not found");
+        Pageable pageable= PageRequest.of(pageSize,pageNumber);
+        Page<Article>article=articleRepository.findAll(pageable);
         List<ArticleWithUserDTO> articleWithOwnerDTOS = new ArrayList<>();
-        for (Article a : art) {
-            CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(a.getCategory_id());
-            ArticleWithUserDTO current = new ArticleWithUserDTO(a, map.map(a.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
-            articleWithOwnerDTOS.add(current);
+            List<Article> art = article.getContent();
+            verifyArticleId(art == null, "Article not found");
+            for (Article a : art) {
+                CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(a.getCategory_id());
+                ArticleWithUserDTO current = new ArticleWithUserDTO(a, map.map(a.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
+                articleWithOwnerDTOS.add(current);
+
         }
         return articleWithOwnerDTOS;
     }
@@ -143,7 +151,7 @@ public class ArticleService {
         Optional<Article> opt=articleRepository.findById(articleId);
         verifyArticleId(!opt.isPresent(), "The article not found");
         Article article=opt.get();
-        Object object=new Object();
+
         synchronized (object){
             article.setViews(article.getViews()+1);
         }
@@ -164,9 +172,9 @@ public class ArticleService {
         return articleWithoutUserDTO;
     }
 
-    private void verifyArticleId(boolean b, String s) {
-        if (b) {
-            throw new NotFoundException(s);
+    private void verifyArticleId(boolean statement, String title) {
+        if (statement) {
+            throw new NotFoundException(title);
         }
     }
 
