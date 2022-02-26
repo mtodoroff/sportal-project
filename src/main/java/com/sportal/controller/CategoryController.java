@@ -60,7 +60,7 @@ public class CategoryController {
     public ResponseEntity<CategoryWithoutArticleDTO> edit(@RequestBody CategoryRequestEditDTO category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
-        return new ResponseEntity( categoryService.editCategory(category.getId()),HttpStatus.OK);
+        return new ResponseEntity( categoryService.editCategory(category),HttpStatus.OK);
 
     }
 

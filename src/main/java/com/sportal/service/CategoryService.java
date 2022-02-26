@@ -2,30 +2,18 @@ package com.sportal.service;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundCategory;
-import com.sportal.exceptions.NotFoundException;
-<<<<<<< HEAD
 import com.sportal.model.dto.articleDTOs.ArticleSearchResponseDTO;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
-import com.sportal.model.dto.categoryDTOs.CategorySearchResponseDTO;
-=======
-import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryRequestEditDTO;
->>>>>>> 66996971eef0a7f02bd64e3e9015b7bb634acacf
 import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Category;
-import com.sportal.model.pojo.User;
 import com.sportal.model.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-
-import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @Service
@@ -47,16 +35,7 @@ public class CategoryService {
     }
 
 
-    public CategoryWithoutArticleDTO edit(CategoryRequestEditDTO category) {
-        Category opt = categoryRepository.findById(category.getId()).orElseThrow(()->  new NotFoundException("Category not found"));
-        CategoryWithoutArticleDTO currentCategory = new CategoryWithoutArticleDTO();
-        Category cat=categoryRepository.findCategoryById(category.getId());
-        currentCategory.setCategory(category.getCategory());
-        currentCategory.setId(category.getId());
-        cat.setCategory(category.getCategory());
-        categoryRepository.save(cat);
-        return currentCategory ;
-    }
+
     public List<ArticleSearchResponseDTO> searchByCategory(String category) {
 
         List<Category> categoryList = categoryRepository.findByCategoryUsingLike(category);
@@ -94,11 +73,13 @@ public class CategoryService {
         return categoryWithArticlesDTOList;
     }
 
-    public CategoryWithoutArticleDTO editCategory(long id) {
-        Category category = categoryRepository.findById(id).orElseThrow(()->new NotFoundException("Category not found"));
+    public CategoryWithoutArticleDTO editCategory(CategoryRequestEditDTO category) {
         CategoryWithoutArticleDTO currentCategory = new CategoryWithoutArticleDTO();
+        Category cat=categoryRepository.findCategoryById(category.getId());
         currentCategory.setCategory(category.getCategory());
-        categoryRepository.save(category);
-        return currentCategory;
+        currentCategory.setId(category.getId());
+        cat.setCategory(category.getCategory());
+        categoryRepository.save(cat);
+        return currentCategory ;
     }
 }
