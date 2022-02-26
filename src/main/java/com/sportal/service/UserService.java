@@ -146,8 +146,6 @@ public class UserService {
     }
 
     public List<CommentResponseDTO> getUserComments(long id) {
-        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found"));
-        CommentResponseDTO dto = new CommentResponseDTO();
         List<CommentResponseDTO> comments = commentDAO.commentsByUserId(id);
         return comments;
     }

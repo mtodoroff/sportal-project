@@ -1,9 +1,8 @@
 package com.sportal.controller;
 
-import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.MessageResponseDTO;
-import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
 import com.sportal.model.dto.categoryDTOs.CategorySearchResponseDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryRequestEditDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.pojo.Category;
@@ -14,14 +13,11 @@ import com.sportal.service.CategoryService;
 import com.sportal.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.Message;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -59,11 +55,13 @@ public class CategoryController {
         return new ResponseEntity(new MessageResponseDTO("You successfully deleted category"),HttpStatus.OK);
     }
 
-    @PutMapping(value = "/categories")
-    public ResponseEntity<CategoryWithoutArticleDTO> edit(@RequestBody Category category, HttpSession session) {
+
+    @PostMapping("/categories/edit")
+    public ResponseEntity<CategoryWithoutArticleDTO> edit(@RequestBody CategoryRequestEditDTO category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         return new ResponseEntity( categoryService.editCategory(category.getId()),HttpStatus.OK);
+
     }
 
     @GetMapping("/categories/search")
