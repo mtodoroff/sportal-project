@@ -60,17 +60,7 @@ public class CategoryController {
     public ResponseEntity<CategoryWithoutArticleDTO>edit(@RequestBody CategoryRequestEditDTO category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
-        Optional<Category> opt = categoryRepository.findById(category.getId());
-        if (!opt.isPresent()) {
-            throw new NotFoundException("Category not found");
-        }
-        CategoryWithoutArticleDTO currentCategory = new CategoryWithoutArticleDTO();
-        Category cat=categoryRepository.findCategoryById(category.getId());
-        currentCategory.setCategory(category.getCategory());
-        currentCategory.setId(category.getId());
-        cat.setCategory(category.getCategory());
-        categoryRepository.save(cat);
-        return ResponseEntity.ok(currentCategory);
+        return ResponseEntity.ok(categoryService.edit(category));
     }
 
     @GetMapping("/categories/search")

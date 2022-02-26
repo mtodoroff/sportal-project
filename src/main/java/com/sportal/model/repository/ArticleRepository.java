@@ -15,9 +15,11 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article,Long> {
 
  @Query(value = "FROM Article  WHERE title LIKE %:title%")
- List<Article> findByTitleUsingLike(@Param("title") String title,Pageable pageable) ;
+ List<Article> findByTitleUsingLike(@Param("title") String title);
  @Query(value = "SELECT * FROM articles ORDER BY views DESC LIMIT 5",nativeQuery = true)
  List<Article> findTopByViews();
  @Query(value = "SELECT * FROM articles ORDER BY created_at DESC LIMIT 5;",nativeQuery = true)
  List<Article> latestFiveArticles();
+ @Query(value = "FROM Article  WHERE category_id.category LIKE %:category_id%")
+ List<Article> findByTitleUsingLikeCategory(@Param("category_id") String category_id,Pageable pageable);
 }

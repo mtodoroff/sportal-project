@@ -42,7 +42,7 @@ public class ArticleService {
     @Autowired
     SessionService sessionService;
     private final static Object object=new Object();
-    
+
     public ArticleResponseDTO addArticle(AddArticleDTO articleDTO, Long userId) {
         validateArticle(articleDTO);
         User u = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Owner not found"));
@@ -64,20 +64,18 @@ public class ArticleService {
         }
     }
 
-    public List<ArticleWithUserDTO> searchByTitle(int pageNumber,int pageSize) {
-        if (pageNumber<0||pageSize<0) {
+    public List<ArticleWithUserDTO> searchByTitle(int pageNumber,int pageSize,String title) {
+        if (pageNumber < 0 || pageSize < 0) {
             throw new NotFoundException("Not found Article with name");
         }
-        Pageable pageable= PageRequest.of(pageSize,pageNumber);
-        Page<Article>article=articleRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(pageSize, pageNumber);
         List<ArticleWithUserDTO> articleWithOwnerDTOS = new ArrayList<>();
-            List<Article> art = article.getContent();
-            verifyArticleId(art == null, "Article not found");
-            for (Article a : art) {
-                CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(a.getCategory_id());
-                ArticleWithUserDTO current = new ArticleWithUserDTO(a, map.map(a.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
-                articleWithOwnerDTOS.add(current);
-
+        List<Article> art = articleRepository.findByTitleUsingLikeCategory(title, pageable);
+        verifyArticleId(art == null, "Article not found");
+        for (Article a : art) {
+            CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(a.getCategory_id());
+            ArticleWithUserDTO current = new ArticleWithUserDTO(a, map.map(a.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
+            articleWithOwnerDTOS.add(current);
         }
         return articleWithOwnerDTOS;
     }

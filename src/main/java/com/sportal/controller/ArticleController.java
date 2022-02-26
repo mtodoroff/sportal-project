@@ -38,9 +38,12 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/search")
-    public List<ArticleWithUserDTO> searchByTitle(@RequestParam(value = "pageNumber") int pageNumber,@RequestParam(value = "pageSize") int pageSize){
-        return articleService.searchByTitle(pageNumber,pageSize);
+    public List<ArticleWithUserDTO> searchByTitle(@RequestParam(value = "pageNumber") int pageNumber,
+                                                  @RequestParam(value = "pageSize") int pageSize,
+                                                  @RequestParam(value = "title") String title){
+        return articleService.searchByTitle(pageNumber,pageSize,title);
     }
+
 
     @GetMapping("/articles/top5")
     public List<ArticleWithoutUserDTO> topFiveMostViewedArticles(){
