@@ -16,6 +16,7 @@ public class CommentResponseDTO {
     private String comment_text;
     private LocalDateTime postDate;
 
+
     public CommentResponseDTO(Comment comment){
         this.id = comment.getId();
         this.comment_text = comment.getCommentText();

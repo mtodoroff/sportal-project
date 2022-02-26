@@ -1,7 +1,7 @@
 package com.sportal.controller;
 
-import com.sportal.exceptions.NotFoundException;
-import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
+import com.sportal.model.dto.MessageResponseDTO;
+import com.sportal.model.dto.categoryDTOs.CategorySearchResponseDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryRequestEditDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -49,23 +48,24 @@ public class CategoryController {
     }
 
     @DeleteMapping("/categories/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable long id, HttpSession session) {
+    public ResponseEntity<MessageResponseDTO> deleteById(@PathVariable long id, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         categoryRepository.deleteById(id);
-        return ResponseEntity.ok().body("\"message\": \"Category removed successfully.\"");
+        return new ResponseEntity(new MessageResponseDTO("You successfully deleted category"),HttpStatus.OK);
     }
 
+
     @PostMapping("/categories/edit")
-    public ResponseEntity<CategoryWithoutArticleDTO>edit(@RequestBody CategoryRequestEditDTO category, HttpSession session) {
+    public ResponseEntity<CategoryWithoutArticleDTO> edit(@RequestBody CategoryRequestEditDTO category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
-        return ResponseEntity.ok(categoryService.edit(category));
+        return new ResponseEntity( categoryService.editCategory(category),HttpStatus.OK);
     }
 
     @GetMapping("/categories/search")
-    public List<ArticleWithoutUserDTO> searchByCategoryName(@RequestParam(value = "category") String category){
-       return categoryService.searchByCategory(category);
+    public ResponseEntity<List<CategorySearchResponseDTO>> searchByCategoryName(@RequestParam(value = "category") String category){
+       return new ResponseEntity( categoryService.searchByCategory(category),HttpStatus.OK);
     }
 
 }

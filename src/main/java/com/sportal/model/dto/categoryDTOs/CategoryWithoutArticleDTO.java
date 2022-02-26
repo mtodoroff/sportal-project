@@ -15,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 public class CategoryWithoutArticleDTO {
 
     private long id;
-    @NotBlank(message = "Category field cannot be empty")
     private String category;
 
      public CategoryWithoutArticleDTO(Category category){

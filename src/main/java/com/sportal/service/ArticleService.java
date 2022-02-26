@@ -41,6 +41,7 @@ public class ArticleService {
     private CategoryRepository categoryRepository;
     @Autowired
     SessionService sessionService;
+
     private final static Object object=new Object();
 
     public ArticleResponseDTO addArticle(AddArticleDTO articleDTO, Long userId) {
@@ -79,9 +80,10 @@ public class ArticleService {
         }
         return articleWithOwnerDTOS;
     }
+
     @Synchronized
     public int likeArticle(long articleId, long userId) {
-        verifyArticleId(articleId<=0, "Not found Article");
+        verifyArticleId(articleId <= 0, "Not found Article");
         Article article = getArticleById(articleId);
         User user = getUserById(userId);
         if (user.getLikedComments().contains(article)) {
@@ -97,7 +99,7 @@ public class ArticleService {
 
     @Synchronized
     public int dislikeArticle(long articleId, long userId) {
-        verifyArticleId(articleId<=0, "Not found Article");
+        verifyArticleId(articleId <= 0, "Not found Article");
         Article article = getArticleById(articleId);
         User user = getUserById(userId);
         if (user.getDislikedArticles().contains(article)) {
@@ -145,26 +147,28 @@ public class ArticleService {
     }
 
     public ArticleWithoutUserDTO getById(long articleId) {
-        verifyArticleId(articleId<=0, "Not found Article");
-        Optional<Article> opt=articleRepository.findById(articleId);
+        verifyArticleId(articleId <= 0, "Not found Article");
+        Optional<Article> opt = articleRepository.findById(articleId);
         verifyArticleId(!opt.isPresent(), "The article not found");
+
         Article article=opt.get();
 
         synchronized (object){
             article.setViews(article.getViews()+1);
         }
         articleRepository.save(article);
-        CategoryWithoutArticleDTO categoryWithoutArticleDTO=new CategoryWithoutArticleDTO(article.getCategory_id());
-        ArticleWithoutUserDTO articleWithoutUserDTO =new ArticleWithoutUserDTO(article);
+        CategoryWithoutArticleDTO categoryWithoutArticleDTO = new CategoryWithoutArticleDTO(article.getCategory_id());
+        ArticleWithoutUserDTO articleWithoutUserDTO = new ArticleWithoutUserDTO(article);
         articleWithoutUserDTO.setCategory(categoryWithoutArticleDTO);
         return articleWithoutUserDTO;
     }
+
     public ArticleWithoutUserDTO deleteById(long articleId) {
-        verifyArticleId(articleId <= 0, "Not found Article");
-        Optional<Article>opt=articleRepository.findById(articleId);
-        Article article=opt.get();
-        CategoryWithoutArticleDTO categoryWithoutArticleDTO=new CategoryWithoutArticleDTO(article.getCategory_id());
-        ArticleWithoutUserDTO articleWithoutUserDTO=new ArticleWithoutUserDTO(article);
+        verifyArticleId(articleId <= 0, "Article not found");
+        Optional<Article> opt = articleRepository.findById(articleId);
+        Article article = opt.get();
+        CategoryWithoutArticleDTO categoryWithoutArticleDTO = new CategoryWithoutArticleDTO(article.getCategory_id());
+        ArticleWithoutUserDTO articleWithoutUserDTO = new ArticleWithoutUserDTO(article);
         articleWithoutUserDTO.setCategory(categoryWithoutArticleDTO);
         articleRepository.delete(article);
         return articleWithoutUserDTO;
@@ -177,13 +181,13 @@ public class ArticleService {
     }
 
     public ArticleResponseDTO editArticle(ArticleEditDTO articleDTO, Long attribute) {
-      Optional<Article> opt =articleRepository.findById(articleDTO.getId());
-      verifyArticleId(!opt.isPresent(), "Not found article to edit");
-      Article article = opt.get();
-      article.setTitle(articleDTO.getTitle());
-      article.setContent(articleDTO.getContent());
-      article.setUpdated_at(LocalDateTime.now());
-      articleRepository.save(article);
-      return new ArticleResponseDTO(article);
+        Optional<Article> opt = articleRepository.findById(articleDTO.getId());
+        verifyArticleId(!opt.isPresent(), "Not found article to edit");
+        Article article = opt.get();
+        article.setTitle(articleDTO.getTitle());
+        article.setContent(articleDTO.getContent());
+        article.setUpdated_at(LocalDateTime.now());
+        articleRepository.save(article);
+        return new ArticleResponseDTO(article);
     }
 }

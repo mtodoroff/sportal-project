@@ -5,10 +5,12 @@ import com.sportal.model.dto.articleDTOs.ArticleResponseDTO;
 import com.sportal.model.dto.commentDTOs.CommentAddReplyRequestDTO;
 import com.sportal.model.dto.commentDTOs.CommentAddRequestDTO;
 import com.sportal.model.dto.commentDTOs.CommentEditRequestDTO;
+import com.sportal.model.dto.commentDTOs.CommentResponseDTO;
 import com.sportal.model.pojo.User;
 import com.sportal.service.CommentService;
 import com.sportal.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +23,9 @@ public class CommentController {
     @Autowired
     private SessionService sessionService;
     @PostMapping("/comments")
-    public ArticleResponseDTO addComment(HttpSession session,@RequestBody CommentAddRequestDTO comment){
+    public ResponseEntity<CommentResponseDTO> addComment(HttpSession session, @RequestBody CommentAddRequestDTO comment){
         User loggedUser = sessionService.getLoggedUser(session);
-        return commentService.addComment(loggedUser,comment);
+        return new ResponseEntity(commentService.addComment(loggedUser,comment), HttpStatus.CREATED);
     }
 
     @PostMapping("comments/reply")
@@ -35,12 +37,10 @@ public class CommentController {
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<String> deleteComment(@PathVariable long id,HttpSession session){
         User loggedUser = sessionService.getLoggedUser(session);
-        if(commentService.userOwnsComment(loggedUser.getId(), id)){
-             commentService.deleteComment(id);
-        }
-        else{
+        if(!commentService.userOwnsComment(loggedUser.getId(), id)){
             throw new BadRequestException("Only the owner of the comment can delete it");
         }
+        commentService.deleteComment(id);
         return ResponseEntity.ok().body("\"message\": \"Comment deleted successfully.\"");
     }
 

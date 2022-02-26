@@ -18,8 +18,6 @@ public class ImageUploadDTO {
 
     public ImageUploadDTO(Picture picture) {
         this.id = picture.getId();
-        this.article.setId(picture.getArticle_id().getId());
-        this.article.setTitle(picture.getArticle_id().getTitle());
-        this.article.setContent(picture.getArticle_id().getContent());
+        this.article.setPicUrl(picture.getPic_url());
     }
 }

@@ -35,7 +35,6 @@ public class PictureService {
             picture.setArticle_id(article);
             picture = pictureRepository.save(picture);
             ArticleForPictureDTO dto=new ArticleForPictureDTO(picture);
-            //TODO what is
             pictureRepository.findById(picture.getId());
             return dto;
         } catch (FileNotFoundException e) {

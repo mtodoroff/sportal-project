@@ -1,6 +1,8 @@
 package com.sportal.controller;
 
 import com.sportal.exceptions.BadRequestException;
+import com.sportal.model.dto.MessageResponseDTO;
+import com.sportal.model.dto.commentDTOs.CommentResponseDTO;
 import com.sportal.model.dto.userDTOs.*;
 import com.sportal.model.pojo.Comment;
 import com.sportal.model.pojo.User;
@@ -33,14 +35,14 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserWithArticleDTO> getById(@PathVariable int id,HttpSession session) {
+    public ResponseEntity<UserGetByIdResponseDTO> getById(@PathVariable int id,HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         return ResponseEntity.ok(userService.getById(id));
     }
 
     @GetMapping("/users/{id}/comments")
-    public ResponseEntity<List<Comment>> getUserComments(@PathVariable long id, HttpSession session) {
+    public ResponseEntity<List<CommentResponseDTO>> getUserComments(@PathVariable long id, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         return ResponseEntity.ok(userService.getUserComments(id));
@@ -70,9 +72,9 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable long id) {
+    public ResponseEntity<MessageResponseDTO> deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok().body("\"message\": \"Profile deleted successfully.\"");
+        return new ResponseEntity(new MessageResponseDTO("You successfully deleted this user"), HttpStatus.OK);
     }
 
     @PutMapping("/users/edit")
@@ -84,7 +86,7 @@ public class UserController {
     }
 
     @PatchMapping("/users/change-password")
-    public ResponseEntity<String> changePassword(@RequestBody UserChangePasswordRequestDTO userChangePasswordRequestDTO, HttpSession session, HttpServletRequest request) {
+    public ResponseEntity<MessageResponseDTO> changePassword(@RequestBody UserChangePasswordRequestDTO userChangePasswordRequestDTO, HttpSession session, HttpServletRequest request) {
         if (!sessionService.userAlreadyLogged(session)) {
             throw new BadRequestException("You must be logged in!");
         }
@@ -93,7 +95,7 @@ public class UserController {
             throw new BadRequestException("You have permission to change only your password");
         }
         userService.changePassword(userChangePasswordRequestDTO);
-        return ResponseEntity.ok().body("Password was changed successfully.");
+        return new ResponseEntity(new MessageResponseDTO("You successfully changed your password!"), HttpStatus.OK);
     }
     //TODO check if email is in DB
     @PutMapping("/users/reset-password/{id}")
