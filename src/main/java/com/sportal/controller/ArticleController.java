@@ -1,10 +1,12 @@
 package com.sportal.controller;
 
+import com.sportal.model.dto.MessageResponseDTO;
 import com.sportal.model.dto.articleDTOs.*;
 import com.sportal.model.pojo.User;
 import com.sportal.service.ArticleService;
 import com.sportal.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,10 +75,11 @@ public class ArticleController {
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public ArticleWithoutUserDTO deleteById(@PathVariable long articleId, HttpSession session){
+    public ResponseEntity<MessageResponseDTO> deleteById(@PathVariable long articleId, HttpSession session){
         User user =sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
-        return articleService.deleteById(articleId);
+        articleService.deleteById(articleId);
+        return new ResponseEntity<>(new MessageResponseDTO("You successfully deleted this article"), HttpStatus.OK);
     }
 
 }

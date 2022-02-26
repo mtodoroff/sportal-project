@@ -6,6 +6,7 @@ import com.sportal.model.dto.articleDTOs.ArticleResponseDTO;
 import com.sportal.model.dto.commentDTOs.CommentAddReplyRequestDTO;
 import com.sportal.model.dto.commentDTOs.CommentAddRequestDTO;
 import com.sportal.model.dto.commentDTOs.CommentEditRequestDTO;
+import com.sportal.model.dto.commentDTOs.CommentResponseDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Comment;
 import com.sportal.model.pojo.User;
@@ -34,15 +35,16 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public ArticleResponseDTO addComment(User user, CommentAddRequestDTO addedComment){
+    public CommentResponseDTO addComment(User user, CommentAddRequestDTO addedComment){
         Article article = getArticleById(addedComment.getArticle_id());
         //TODO extract in method
         String commentText = addedComment.getComment_text();
         Validator.validateEmptyField(commentText,"Comment");
-        commentText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
-        Comment comment = new Comment(commentText,article,user);
+        String crealedText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
+        Comment comment = new Comment(crealedText,article,user);
+        article.getComments().add(comment);
         commentRepository.save(comment);
-        return new ArticleResponseDTO(article);
+        return new CommentResponseDTO(comment);
     }
 
     public boolean userOwnsComment(long userId, long commentId) {
@@ -55,15 +57,14 @@ public class CommentService {
         Article article = parent.getArticle();
         String commentText = reply.getComment_text();
         Validator.validateEmptyField(commentText,"Comment");
-        commentText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
-        Comment comment = new Comment(commentText, article, loggedUser, parent);
+        String crealedText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
+        Comment comment = new Comment(crealedText, article, loggedUser, parent);
         commentRepository.save(comment);
         return new ArticleResponseDTO(article);
     }
 
     public void deleteComment(long commentId) {
-        Comment comment = getCommentById(commentId);
-        commentRepository.delete(comment);
+        commentRepository.deleteById(commentId);
     }
 
     @Transactional

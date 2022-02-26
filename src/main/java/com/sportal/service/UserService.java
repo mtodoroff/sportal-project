@@ -3,13 +3,16 @@ package com.sportal.service;
 import com.sportal.exceptions.AuthenticationException;
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundException;
+import com.sportal.model.dao.CommentDAO;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
+import com.sportal.model.dto.commentDTOs.CommentResponseDTO;
 import com.sportal.model.dto.userDTOs.*;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Category;
 import com.sportal.model.pojo.Comment;
 import com.sportal.model.pojo.User;
+import com.sportal.model.repository.CommentRepository;
 import com.sportal.model.repository.UserRepository;
 import com.sportal.util.PasswordBuilder;
 import com.sportal.util.Validator;
@@ -28,6 +31,10 @@ import java.util.*;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private CommentDAO commentDAO;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -125,19 +132,9 @@ public class UserService {
         return userGetAllResponseDTOS;
     }
 
-    public UserWithArticleDTO getById(long id) {
-        User user = userRepository.getById(id);
-        UserWithArticleDTO dto = modelMapper.map(user, UserWithArticleDTO.class);
-        Set<Article> article = user.getArticles();
-        Set<ArticleWithoutUserDTO> currentDTO = new HashSet<>();
-        for (Article a : article) {
-            ArticleWithoutUserDTO art = (modelMapper.map(a, ArticleWithoutUserDTO.class));
-            Category cat = a.getCategory_id();
-            CategoryWithoutArticleDTO categoryWithoutArticleDTO = new CategoryWithoutArticleDTO(cat);
-            art.setCategory(categoryWithoutArticleDTO);
-            currentDTO.add(art);
-        }
-        dto.setArticle(currentDTO);
+    public UserGetByIdResponseDTO getById(long id) {
+        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found"));
+        UserGetByIdResponseDTO dto = modelMapper.map(user, UserGetByIdResponseDTO.class);
         return dto;
     }
 
@@ -148,9 +145,10 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public List<Comment> getUserComments(long id) {
-        User user = userRepository.getById(id);
-        List<Comment> comments = user.getComments();
+    public List<CommentResponseDTO> getUserComments(long id) {
+        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found"));
+        CommentResponseDTO dto = new CommentResponseDTO();
+        List<CommentResponseDTO> comments = commentDAO.commentsByUserId(id);
         return comments;
     }
 

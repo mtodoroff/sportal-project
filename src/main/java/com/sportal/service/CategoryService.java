@@ -2,8 +2,12 @@ package com.sportal.service;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundCategory;
+import com.sportal.exceptions.NotFoundException;
+import com.sportal.model.dto.articleDTOs.ArticleSearchResponseDTO;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
+import com.sportal.model.dto.categoryDTOs.CategorySearchResponseDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Category;
 import com.sportal.model.repository.CategoryRepository;
@@ -32,17 +36,17 @@ public class CategoryService {
         return cat;
     }
 
-    public List<ArticleWithoutUserDTO> searchByCategory(String category) {
+    public List<ArticleSearchResponseDTO> searchByCategory(String category) {
         List<Category> categoryList = categoryRepository.findByCategoryUsingLike(category);
         if (category.trim().isEmpty() || categoryList == null) {
             throw new NotFoundCategory("Category not found");
         }
 
-        List<ArticleWithoutUserDTO> articleWithoutUserDTO = new ArrayList<>();
+        List<ArticleSearchResponseDTO> articleWithoutUserDTO = new ArrayList<>();
 
         for (Category categoryElement : categoryList) {
             for (Article a : categoryElement.getArticles()) {
-                ArticleWithoutUserDTO articleWithoutUserDTOCurrent = mapper.map(a, ArticleWithoutUserDTO.class);
+                ArticleSearchResponseDTO articleWithoutUserDTOCurrent = mapper.map(a, ArticleSearchResponseDTO.class);
                 articleWithoutUserDTO.add(articleWithoutUserDTOCurrent);
             }
         }
@@ -66,5 +70,13 @@ public class CategoryService {
            categoryWithArticlesDTOList.add(categoryWithArticlesDTO);
         }
         return categoryWithArticlesDTOList;
+    }
+
+    public CategoryWithoutArticleDTO editCategory(long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(()->new NotFoundException("Category not found"));
+        CategoryWithoutArticleDTO currentCategory = new CategoryWithoutArticleDTO();
+        currentCategory.setCategory(category.getCategory());
+        categoryRepository.save(category);
+        return currentCategory;
     }
 }

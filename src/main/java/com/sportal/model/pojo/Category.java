@@ -13,8 +13,10 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Category extends BasePojo {
-
+public class Category {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Column
     private String category;
     @OneToMany(mappedBy = "category_id")

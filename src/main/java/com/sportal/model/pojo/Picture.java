@@ -13,8 +13,10 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Picture extends BasePojo{
-
+public class Picture {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Column
     private String pic_url;
     @ManyToOne

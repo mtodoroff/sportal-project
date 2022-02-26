@@ -18,7 +18,9 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class Article extends BasePojo{
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Column
     private String title;
     @Column
