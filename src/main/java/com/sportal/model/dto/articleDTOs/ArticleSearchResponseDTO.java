@@ -15,6 +15,7 @@ public class ArticleSearchResponseDTO {
     private String title;
     private Picture picture;
     private LocalDateTime updated_at;
+    private String category;
 
 
 }

@@ -33,7 +33,7 @@ public class PictureService {
                 throw new NotFoundException("Article not found");
             }
             Article article =opt.get();
-            picture.setPic_url(picFile.getAbsolutePath());
+            picture.setPic_url(picFile.getName());
             picture.setArticle_id(article);
             picture = pictureRepository.save(picture);
             ImageResponseDTO dto=new ImageResponseDTO(picture);

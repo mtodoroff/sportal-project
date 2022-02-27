@@ -59,7 +59,6 @@ public class CategoryService {
         CategoryWithoutArticleDTO currentDto = new CategoryWithoutArticleDTO();
         Category category = categoryRepository.findCategoryById(dto.getId());
         currentDto.setCategory(dto.getCategory());
-//        currentDto.setId(dto.getId());
         if (dto.getCategory() == null || dto.getCategory().trim().isEmpty()) {
             throw new BadRequestException("New category cannot be null or empty");
         }

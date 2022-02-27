@@ -10,9 +10,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class VideoResponseDTO {
+    private long id;
     private String videoUrl;
 
     public VideoResponseDTO(Video video) {
+        this.id = video.getId();
         this.videoUrl = video.getVideo_url();
     }
 }

@@ -38,9 +38,6 @@ public class CommentService {
         Validator.validateEmptyField(commentText,"Comment");
         String replacement = "******";
         String crealedText = commentText.replaceAll(CensoredWords.getRegexCensorship(),replacement);
-//        if (crealedText.contains(replacement)){
-//            banUser(user);
-//        }
         Comment comment = new Comment(crealedText,article,user);
         article.getComments().add(comment);
         commentRepository.save(comment);

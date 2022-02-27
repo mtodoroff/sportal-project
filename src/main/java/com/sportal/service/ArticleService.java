@@ -70,7 +70,7 @@ public class ArticleService {
     }
 
 
-    public List<ArticleSearchResponseDTO> searchByTitle(int pageNumber,int pageSize,String title) {
+    public List<ArticleSearchResponseDTO> searchByCategory(int pageNumber, int pageSize, String title) {
         if (pageNumber < 0 || pageSize < 0) {
             throw new NotFoundException("Not found Article with name");
         }
@@ -87,6 +87,7 @@ public class ArticleService {
             current.setUpdated_at(a.getUpdated_at());
             current.setTitle(a.getTitle());
             current.setPicture(a.getArticleImages().stream().findFirst().orElse(defaultPicture));
+            current.setCategory(a.getCategory_id().getCategory());
             searchResponseDTOS.add(current);
         }
         return searchResponseDTOS;

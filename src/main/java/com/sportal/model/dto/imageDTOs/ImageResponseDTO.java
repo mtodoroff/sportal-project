@@ -9,10 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ImageResponseDTO {
-
+    private long id;
     private String picUrl;
 
     public ImageResponseDTO(Picture picture) {
+        this.id = picture.getId();
         this.picUrl = picture.getPic_url();
     }
 }
