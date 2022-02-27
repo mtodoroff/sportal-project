@@ -4,6 +4,7 @@ import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundCategory;
 import com.sportal.model.dto.articleDTOs.ArticleSearchResponseDTO;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryRequestDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryRequestEditDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
 import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
@@ -23,15 +24,17 @@ public class CategoryService {
     @Autowired
     ModelMapper mapper;
 
-    public Category createCategory(Category category) {
+    public CategoryWithoutArticleDTO createCategory(CategoryRequestDTO category) {
         Category cat = new Category();
         cat.setCategory(category.getCategory());
         List<Category> categorySet = categoryRepository.findAll();
         if (categorySet.contains(cat)) {
             throw new BadRequestException("This category is already added!");
         }
+        CategoryWithoutArticleDTO dto = new CategoryWithoutArticleDTO();
+        dto.setCategory(category.getCategory());
         categoryRepository.save(cat);
-        return cat;
+        return dto;
     }
 
 
@@ -58,7 +61,7 @@ public class CategoryService {
         List<CategoryWithArticlesDTO> categoryWithArticlesDTOList=new ArrayList<>();
         List<Category>category=categoryRepository.findAll();
         if(category.isEmpty()){
-            throw new NotFoundCategory("No found any categorues");
+            throw new NotFoundCategory("No found any categories");
         }
         for(Category c:category){
            CategoryWithArticlesDTO categoryWithArticlesDTO=new CategoryWithArticlesDTO(c);
@@ -77,7 +80,6 @@ public class CategoryService {
         CategoryWithoutArticleDTO currentCategory = new CategoryWithoutArticleDTO();
         Category cat=categoryRepository.findCategoryById(category.getId());
         currentCategory.setCategory(category.getCategory());
-        currentCategory.setId(category.getId());
         cat.setCategory(category.getCategory());
         categoryRepository.save(cat);
         return currentCategory ;

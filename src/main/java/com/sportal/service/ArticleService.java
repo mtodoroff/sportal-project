@@ -202,4 +202,14 @@ public class ArticleService {
         }
         return article;
     }
+
+    public List<ArticleWithoutUserDTO> getLeadNews() {
+        List<Article>art=articleRepository.findLeadNews();
+        List<ArticleWithoutUserDTO>article=new ArrayList<>();
+        for(Article a:art){
+            ArticleWithoutUserDTO dto=new ArticleWithoutUserDTO(a);
+            article.add(dto);
+        }
+        return article;
+    }
 }

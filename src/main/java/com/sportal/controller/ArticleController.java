@@ -61,6 +61,10 @@ public class ArticleController {
     public List<ArticleWithoutUserDTO> mostComment(){
         return articleService.getMostComment();
     }
+    @GetMapping("lead_news")
+    public List<ArticleWithoutUserDTO> leadNews(){
+        return articleService.getLeadNews();
+    }
     @GetMapping("/articles/latest")
     public List<ArticleWithoutUserDTO> latestArticles(){
         return articleService.latestArticles();
@@ -91,5 +95,4 @@ public class ArticleController {
         articleService.deleteById(articleId);
         return new ResponseEntity<>(new MessageResponseDTO("You successfully deleted this article"), HttpStatus.OK);
     }
-
 }

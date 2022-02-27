@@ -14,11 +14,11 @@ import javax.validation.constraints.NotBlank;
 @Component
 public class CategoryWithoutArticleDTO {
 
-    private long id;
+
     private String category;
 
-     public CategoryWithoutArticleDTO(Category category){
-      this.id=category.getId();
-      this.category=category.getCategory();
-     }
+    public CategoryWithoutArticleDTO(Category category) {
+
+        this.category = category.getCategory();
+    }
 }

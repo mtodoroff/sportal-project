@@ -26,4 +26,7 @@ public interface ArticleRepository extends JpaRepository<Article,Long> {
          "(SELECT comments.article_id, COUNT(*) AS comment FROM comments GROUP BY article_id LIMIT 10) \n" +
          "comments ON articles.id=comments.article_id",nativeQuery = true)
  List<Article>findByMostComment();
+
+ @Query(value ="SELECT * FROM articles ORDER BY updated_at DESC LIMIT 10" ,nativeQuery = true)
+ List<Article> findLeadNews();
 }
