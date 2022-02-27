@@ -70,7 +70,9 @@ public class ArticleService {
             throw new NotFoundException("Not found Article with name");
         }
         Pageable pageable = PageRequest.of(pageSize, pageNumber);
+
         List<ArticleWithUserDTO> articleWithOwnerDTOS = new ArrayList<>();
+
         List<Article> art = articleRepository.findByTitleUsingLikeCategory(title, pageable);
         verifyArticleId(art == null, "Article not found");
         for (Article a : art) {
@@ -189,5 +191,15 @@ public class ArticleService {
         article.setUpdated_at(LocalDateTime.now());
         articleRepository.save(article);
         return new ArticleResponseDTO(article);
+    }
+
+    public List<ArticleWithoutUserDTO> getMostComment() {
+        List<Article>art=articleRepository.findByMostComment();
+        List<ArticleWithoutUserDTO>article=new ArrayList<>();
+        for(Article a:art){
+            ArticleWithoutUserDTO dto=new ArticleWithoutUserDTO(a);
+            article.add(dto);
+        }
+        return article;
     }
 }

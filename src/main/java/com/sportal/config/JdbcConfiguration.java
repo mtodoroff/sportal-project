@@ -16,8 +16,7 @@ public class JdbcConfiguration {
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/sportal_project");
         dataSource.setUsername("root");
-        dataSource.setPassword("root");
-
+        dataSource.setPassword("ponton");
         return dataSource;
     }
 }

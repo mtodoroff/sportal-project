@@ -22,4 +22,8 @@ public interface ArticleRepository extends JpaRepository<Article,Long> {
  List<Article> latestFiveArticles();
  @Query(value = "FROM Article  WHERE category_id.category LIKE %:category_id%")
  List<Article> findByTitleUsingLikeCategory(@Param("category_id") String category_id,Pageable pageable);
+ @Query(value = "SELECT *FROM articles  JOIN \n" +
+         "(SELECT comments.article_id, COUNT(*) AS comment FROM comments GROUP BY article_id LIMIT 10) \n" +
+         "comments ON articles.id=comments.article_id",nativeQuery = true)
+ List<Article>findByMostComment();
 }

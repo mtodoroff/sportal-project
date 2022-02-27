@@ -57,7 +57,10 @@ public class ArticleController {
     public List<ArticleWithoutUserDTO> mainPage(){
         return articleService.getTopFiveMostViewed();
     }
-
+    @GetMapping("most_comment")
+    public List<ArticleWithoutUserDTO> mostComment(){
+        return articleService.getMostComment();
+    }
     @GetMapping("/articles/latest")
     public List<ArticleWithoutUserDTO> latestArticles(){
         return articleService.latestArticles();
