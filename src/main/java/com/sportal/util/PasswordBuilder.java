@@ -7,11 +7,12 @@ public class PasswordBuilder {
     private static final String LOWER_CASES = "abcdefghijklmnopqrstuvwxyz";
 
     public static String generatePassword(int length) {
-        String password = "";
+        StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < length - 3; i++) {
-            password += randomCharacter(LOWER_CASES);
+            builder.append(randomCharacter(LOWER_CASES));
         }
+        String password=builder.toString();
         String randomDigit = randomCharacter(DIGITS);
         password = insertAtRandom(password, randomDigit);
         String randomCharacter = randomCharacter(SYMBOLS);

@@ -69,14 +69,14 @@ public class ArticleService {
         }
     }
 
-    public List<ArticleSearchResponseDTO> searchByTitle(int pageNumber, int pageSize) {
+
+    public List<ArticleSearchResponseDTO> searchByTitle(int pageNumber,int pageSize,String title) {
         if (pageNumber < 0 || pageSize < 0) {
             throw new NotFoundException("Not found Article with name");
         }
         Pageable pageable = PageRequest.of(pageSize, pageNumber);
-        Page<Article> article = articleRepository.findAll(pageable);
+        List<Article> art =articleRepository.findByTitleUsingLikeCategory(title, pageable);;
         List<ArticleSearchResponseDTO> searchResponseDTOS = new ArrayList<>();
-        List<Article> art = article.getContent();
         verifyArticleId(art == null, "Article not found");
         Picture defaultPicture = new Picture();
         defaultPicture.setPic_url("./article_images/sportal.png");
@@ -198,5 +198,25 @@ public class ArticleService {
         article.setUpdated_at(LocalDateTime.now());
         articleRepository.save(article);
         return new ArticleResponseDTO(article);
+    }
+
+    public List<ArticleWithoutUserDTO> getMostComment() {
+        List<Article>art=articleRepository.findByMostComment();
+        List<ArticleWithoutUserDTO>article=new ArrayList<>();
+        for(Article a:art){
+            ArticleWithoutUserDTO dto=new ArticleWithoutUserDTO(a);
+            article.add(dto);
+        }
+        return article;
+    }
+
+    public List<ArticleWithoutUserDTO> getLeadNews() {
+        List<Article>art=articleRepository.findLeadNews();
+        List<ArticleWithoutUserDTO>article=new ArrayList<>();
+        for(Article a:art){
+            ArticleWithoutUserDTO dto=new ArticleWithoutUserDTO(a);
+            article.add(dto);
+        }
+        return article;
     }
 }

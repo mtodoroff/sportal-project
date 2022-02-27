@@ -4,7 +4,12 @@ import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundCategory;
 import com.sportal.model.dto.articleDTOs.ArticleSearchResponseDTO;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
+
 import com.sportal.model.dto.categoryDTOs.*;
+import com.sportal.model.dto.categoryDTOs.CategoryRequestDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryRequestEditDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
+import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Category;
 import com.sportal.model.repository.CategoryRepository;
@@ -21,8 +26,8 @@ public class CategoryService {
     @Autowired
     ModelMapper mapper;
 
-    public List<CategorySearchResponseDTO> searchByCategory(String category) {
 
+    public List<CategorySearchResponseDTO> searchByCategory(String category) {
         List<Category> categoryList = categoryRepository.findByCategoryUsingLike(category);
         if (category.trim().isEmpty() || categoryList == null) {
             throw new NotFoundCategory("Category not found");
@@ -39,12 +44,13 @@ public class CategoryService {
         return categorySearchResponseDTOList;
     }
 
-    public List<CategoryGetAllResponse> getAllCategories() {
+
+    public List<CategoryWithArticlesDTO> findAllCategoriesWithArticles() {
+        List<CategoryWithArticlesDTO> list = new ArrayList<>();
         List<Category> category = categoryRepository.findAll();
-        List<CategoryGetAllResponse> list = new ArrayList<>();
-        for (Category c : category) {
-            CategoryGetAllResponse categoryGetAllResponse = new CategoryGetAllResponse(c);
-            list.add(categoryGetAllResponse);
+        if (category.isEmpty()) {
+            throw new NotFoundCategory("No found any categories");
+
         }
         return list;
     }
@@ -53,20 +59,21 @@ public class CategoryService {
         CategoryWithoutArticleDTO currentDto = new CategoryWithoutArticleDTO();
         Category category = categoryRepository.findCategoryById(dto.getId());
         currentDto.setCategory(dto.getCategory());
-        currentDto.setId(dto.getId());
+//        currentDto.setId(dto.getId());
         if (dto.getCategory() == null || dto.getCategory().trim().isEmpty()) {
             throw new BadRequestException("New category cannot be null or empty");
         }
         List<Category> categorySet = categoryRepository.findAll();
         for (Category cat : categorySet) {
-           if (cat.getCategory().equals(dto.getCategory())){
-               throw new BadRequestException("This category name is already added!");
-           }
+            if (cat.getCategory().equals(dto.getCategory())) {
+                throw new BadRequestException("This category name is already added!");
+            }
         }
         category.setCategory(dto.getCategory());
         categoryRepository.save(category);
         return currentDto;
     }
+
 
     public CategoryWithoutArticleDTO addCategory(CategoryWithoutArticleDTO dto) {
         Category category = new Category();
@@ -80,6 +87,9 @@ public class CategoryService {
         }
         categoryRepository.save(category);
         CategoryWithoutArticleDTO currentDTO = new CategoryWithoutArticleDTO(category);
+
         return currentDTO;
+
+
     }
 }

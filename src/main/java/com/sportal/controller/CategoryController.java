@@ -29,16 +29,18 @@ public class CategoryController {
     @Autowired
     CategoryRepository categoryRepository;
 
+
     @PostMapping("/categories")
     public ResponseEntity<CategoryWithoutArticleDTO> addCategory(@RequestBody CategoryWithoutArticleDTO category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         return new ResponseEntity(categoryService.addCategory(category), HttpStatus.CREATED);
+
     }
 
     @GetMapping("/categories")
-    public List<CategoryGetAllResponse> getAllCategory() {
-        return categoryService.getAllCategories();
+    public List<CategoryWithArticlesDTO> findAllCategoriesWithArticles() {
+        return categoryService.findAllCategoriesWithArticles();
     }
 
     @DeleteMapping("/categories/{id}")
@@ -55,7 +57,6 @@ public class CategoryController {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         return new ResponseEntity( categoryService.editCategory(category),HttpStatus.OK);
-
     }
 
     @GetMapping("/categories/search")

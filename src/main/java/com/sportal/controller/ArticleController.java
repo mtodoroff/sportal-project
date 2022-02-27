@@ -27,63 +27,75 @@ public class ArticleController {
 
 
     @PostMapping("/articles/add")
-        public ResponseEntity<ArticleResponseDTO> add(@RequestBody AddArticleDTO article, HttpSession session) {
-        User user  = sessionService.getLoggedUser(session);
+    public ResponseEntity<ArticleResponseDTO> add(@RequestBody AddArticleDTO article, HttpSession session) {
+        User user = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
-        return ResponseEntity.ok(articleService.addArticle(article,(Long)session.getAttribute(SessionService.USER_ID)));
+        return ResponseEntity.ok(articleService.addArticle(article, (Long) session.getAttribute(SessionService.USER_ID)));
     }
 
     @PutMapping("/articles/edit")
-    public ResponseEntity<ArticleResponseDTO>editArticle(@RequestBody ArticleEditDTO articleDTO, HttpSession session){
-        User user =sessionService.getLoggedUser(session);
+    public ResponseEntity<ArticleResponseDTO> editArticle(@RequestBody ArticleEditDTO articleDTO, HttpSession session) {
+        User user = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
-        return ResponseEntity.ok(articleService.editArticle(articleDTO,(Long)session.getAttribute(SessionService.USER_ID)));
+        return ResponseEntity.ok(articleService.editArticle(articleDTO, (Long) session.getAttribute(SessionService.USER_ID)));
     }
 
     @GetMapping("/articles/search")
-    public List<ArticleSearchResponseDTO> searchByTitle(@RequestParam(value = "pageNumber") int pageNumber,@RequestParam(value = "pageSize") int pageSize){
-        return articleService.searchByTitle(pageNumber,pageSize);
+    public List<ArticleSearchResponseDTO> searchByTitle(@RequestParam(value = "pageNumber") int pageNumber,
+                                                        @RequestParam(value = "pageSize") int pageSize,
+                                                        @RequestParam(value = "title") String title) {
+        return articleService.searchByTitle(pageNumber, pageSize, title);
     }
 
+
     @GetMapping("/articles/top5")
-    public List<ArticleWithoutUserDTO> topFiveMostViewedArticles(){
+    public List<ArticleWithoutUserDTO> topFiveMostViewedArticles() {
         return articleService.getTopFiveMostViewed();
     }
 
     @GetMapping("/")
-    public List<ArticleWithoutUserDTO> mainPage(){
+    public List<ArticleWithoutUserDTO> mainPage() {
         return articleService.getTopFiveMostViewed();
     }
 
+    @GetMapping("most_comment")
+    public List<ArticleWithoutUserDTO> mostComment() {
+        return articleService.getMostComment();
+    }
+
+    @GetMapping("lead_news")
+    public List<ArticleWithoutUserDTO> leadNews() {
+        return articleService.getLeadNews();
+    }
+
     @GetMapping("/articles/latest")
-    public List<ArticleWithoutUserDTO> latestArticles(){
+    public List<ArticleWithoutUserDTO> latestArticles() {
         return articleService.latestArticles();
     }
 
 
     @PostMapping("/articles/{id}/like")
-    public int likePost(@PathVariable long id, HttpSession session){
+    public int likePost(@PathVariable long id, HttpSession session) {
         User loggedUser = sessionService.getLoggedUser(session);
-        return articleService.likeArticle(id,loggedUser.getId());
+        return articleService.likeArticle(id, loggedUser.getId());
     }
 
     @PostMapping("/articles/{id}/dislike")
-    public int unlikePost(@PathVariable long id, HttpSession session){
+    public int unlikePost(@PathVariable long id, HttpSession session) {
         User loggedUser = sessionService.getLoggedUser(session);
-        return articleService.dislikeArticle(id,loggedUser.getId());
+        return articleService.dislikeArticle(id, loggedUser.getId());
     }
 
     @GetMapping("/articles/{articleId}")
-    public ArticleWithoutUserDTO getById(@PathVariable long articleId){
+    public ArticleWithoutUserDTO getById(@PathVariable long articleId) {
         return articleService.getById(articleId);
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public ResponseEntity<MessageResponseDTO> deleteById(@PathVariable long articleId, HttpSession session){
-        User user =sessionService.getLoggedUser(session);
+    public ResponseEntity<MessageResponseDTO> deleteById(@PathVariable long articleId, HttpSession session) {
+        User user = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
         articleService.deleteById(articleId);
         return new ResponseEntity<>(new MessageResponseDTO("You successfully deleted this article"), HttpStatus.OK);
     }
-
 }

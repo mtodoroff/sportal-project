@@ -17,7 +17,6 @@ public class JdbcConfiguration {
         dataSource.setUrl("jdbc:mysql://localhost:3306/sportal_project");
         dataSource.setUsername("root");
         dataSource.setPassword("root");
-
         return dataSource;
     }
 }
