@@ -41,7 +41,7 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/search")
-    public List<ArticleWithUserDTO> searchByTitle(@RequestParam(value = "pageNumber") int pageNumber,@RequestParam(value = "pageSize") int pageSize){
+    public List<ArticleSearchResponseDTO> searchByTitle(@RequestParam(value = "pageNumber") int pageNumber,@RequestParam(value = "pageSize") int pageSize){
         return articleService.searchByTitle(pageNumber,pageSize);
     }
 

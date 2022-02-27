@@ -2,11 +2,13 @@ package com.sportal.controller;
 
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.videoDTOs.DeleteVideoResponseDTO;
+import com.sportal.model.dto.videoDTOs.VideoResponseDTO;
 import com.sportal.model.pojo.User;
 import com.sportal.service.SessionService;
 import com.sportal.service.VideoService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,11 +27,11 @@ public class VideoController {
     SessionService sessionService;
 
     @PostMapping("/articles/video")
-    public String uploadArticleVideo(@RequestParam(name = "file") MultipartFile file,
-                                     @RequestParam(value = "article_id") Long articleId, HttpServletRequest request) {
+    public ResponseEntity<VideoResponseDTO> uploadArticleVideo(@RequestParam(name = "file") MultipartFile file,
+                                                               @RequestParam(value = "article_id") Long articleId, HttpServletRequest request) {
         User user  = sessionService.getLoggedUser(request.getSession());
         sessionService.validateAdmin(user);
-        return videoService.uploadVideo(file,articleId,request);
+        return new ResponseEntity<>(videoService.uploadVideo(file,articleId,request), HttpStatus.CREATED);
     }
     @SneakyThrows
     @GetMapping("/files/{video}")
@@ -43,7 +45,7 @@ public class VideoController {
     }
 
     @DeleteMapping("/video/{videoId}")
-    public ResponseEntity<DeleteVideoResponseDTO>deleteVideoById(@PathVariable(value = "videoId") Long videoId,HttpServletRequest request){
+    public ResponseEntity<DeleteVideoResponseDTO> deleteVideoById(@PathVariable(value = "videoId") Long videoId,HttpServletRequest request){
         User user  = sessionService.getLoggedUser(request.getSession());
         sessionService.validateAdmin(user);
         return videoService.deleteById(videoId);

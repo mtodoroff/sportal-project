@@ -10,6 +10,7 @@ import com.sportal.model.dto.userDTOs.UserWithoutArticlesDTO;
 import com.sportal.model.pojo.Article;
 
 import com.sportal.model.pojo.Category;
+import com.sportal.model.pojo.Picture;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.ArticleRepository;
 import com.sportal.model.repository.CategoryRepository;
@@ -23,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,8 @@ public class ArticleService {
     @Autowired
     SessionService sessionService;
 
-    private final static Object object=new Object();
+    private final static Object object = new Object();
+
 
     public ArticleResponseDTO addArticle(AddArticleDTO articleDTO, Long userId) {
         validateArticle(articleDTO);
@@ -55,7 +58,8 @@ public class ArticleService {
         article.setCategory_id(category);
         ArticleResponseDTO dto = map.map(article, ArticleResponseDTO.class);
         articleRepository.save(article);
-        dto.setId(category.getId());
+        dto.setId(article.getId());
+        dto.setComments(new ArrayList<>());
         return dto;
     }
 
@@ -65,22 +69,27 @@ public class ArticleService {
         }
     }
 
-    public List<ArticleWithUserDTO> searchByTitle(int pageNumber,int pageSize) {
-        if (pageNumber<0||pageSize<0) {
+    public List<ArticleSearchResponseDTO> searchByTitle(int pageNumber, int pageSize) {
+        if (pageNumber < 0 || pageSize < 0) {
             throw new NotFoundException("Not found Article with name");
         }
-        Pageable pageable= PageRequest.of(pageSize,pageNumber);
-        Page<Article>article=articleRepository.findAll(pageable);
-        List<ArticleWithUserDTO> articleWithOwnerDTOS = new ArrayList<>();
-            List<Article> art = article.getContent();
-            verifyArticleId(art == null, "Article not found");
-            for (Article a : art) {
-                CategoryWithoutArticleDTO categoryDTO = new CategoryWithoutArticleDTO(a.getCategory_id());
-                ArticleWithUserDTO current = new ArticleWithUserDTO(a, map.map(a.getUser(), UserWithoutArticlesDTO.class), categoryDTO);
-                articleWithOwnerDTOS.add(current);
-
+        Pageable pageable = PageRequest.of(pageSize, pageNumber);
+        Page<Article> article = articleRepository.findAll(pageable);
+        List<ArticleSearchResponseDTO> searchResponseDTOS = new ArrayList<>();
+        List<Article> art = article.getContent();
+        verifyArticleId(art == null, "Article not found");
+        Picture defaultPicture = new Picture();
+        defaultPicture.setPic_url("./article_images/sportal.png");
+        defaultPicture.setId(1);
+        for (Article a : art) {
+            ArticleSearchResponseDTO current = new ArticleSearchResponseDTO();
+            current.setId(a.getId());
+            current.setUpdated_at(a.getUpdated_at());
+            current.setTitle(a.getTitle());
+            current.setPicture(a.getArticleImages().stream().findFirst().orElse(defaultPicture));
+            searchResponseDTOS.add(current);
         }
-        return articleWithOwnerDTOS;
+        return searchResponseDTOS;
     }
 
     @Synchronized
@@ -148,16 +157,14 @@ public class ArticleService {
         return articleRepository.findById(id).orElseThrow(() -> new NotFoundException("Article not found!"));
     }
 
+    @Synchronized
     public ArticleWithoutUserDTO getById(long articleId) {
         verifyArticleId(articleId <= 0, "Not found Article");
         Optional<Article> opt = articleRepository.findById(articleId);
         verifyArticleId(!opt.isPresent(), "The article not found");
 
-        Article article=opt.get();
-
-        synchronized (object){
-            article.setViews(article.getViews()+1);
-        }
+        Article article = opt.get();
+        article.setViews(article.getViews() + 1);
         articleRepository.save(article);
         CategoryWithoutArticleDTO categoryWithoutArticleDTO = new CategoryWithoutArticleDTO(article.getCategory_id());
         ArticleWithoutUserDTO articleWithoutUserDTO = new ArticleWithoutUserDTO(article);

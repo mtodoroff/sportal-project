@@ -2,6 +2,7 @@ package com.sportal.service;
 
 import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.videoDTOs.DeleteVideoResponseDTO;
+import com.sportal.model.dto.videoDTOs.VideoResponseDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Video;
 import com.sportal.model.repository.ArticleRepository;
@@ -28,7 +29,7 @@ public class VideoService {
     private ArticleRepository articleRepository;
 
     @SneakyThrows
-    public String uploadVideo(MultipartFile file, Long articleId, HttpServletRequest request) {
+    public VideoResponseDTO uploadVideo(MultipartFile file, Long articleId, HttpServletRequest request) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         String name = (System.nanoTime() + "." + extension);
         Files.copy(file.getInputStream(), new File("uploads" + File.separator + name).toPath());
@@ -42,7 +43,8 @@ public class VideoService {
         video.setArticle(article);
         videoRepository.save(video);
         article.setVideo(video);
-        return name;
+        VideoResponseDTO videoResponseDTO = new VideoResponseDTO(video);
+        return videoResponseDTO;
     }
 
     public ResponseEntity<DeleteVideoResponseDTO> deleteById(Long videoId) {

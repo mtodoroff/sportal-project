@@ -4,9 +4,7 @@ import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundCategory;
 import com.sportal.model.dto.articleDTOs.ArticleSearchResponseDTO;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
-import com.sportal.model.dto.categoryDTOs.CategoryRequestEditDTO;
-import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
-import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
+import com.sportal.model.dto.categoryDTOs.*;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Category;
 import com.sportal.model.repository.CategoryRepository;
@@ -23,63 +21,65 @@ public class CategoryService {
     @Autowired
     ModelMapper mapper;
 
-    public Category createCategory(Category category) {
-        Category cat = new Category();
-        cat.setCategory(category.getCategory());
-        List<Category> categorySet = categoryRepository.findAll();
-        if (categorySet.contains(cat)) {
-            throw new BadRequestException("This category is already added!");
-        }
-        categoryRepository.save(cat);
-        return cat;
-    }
-
-
-
-    public List<ArticleSearchResponseDTO> searchByCategory(String category) {
+    public List<CategorySearchResponseDTO> searchByCategory(String category) {
 
         List<Category> categoryList = categoryRepository.findByCategoryUsingLike(category);
         if (category.trim().isEmpty() || categoryList == null) {
             throw new NotFoundCategory("Category not found");
         }
 
-        List<ArticleSearchResponseDTO> articleWithoutUserDTO = new ArrayList<>();
+        List<CategorySearchResponseDTO> categorySearchResponseDTOList = new ArrayList<>();
 
         for (Category categoryElement : categoryList) {
             for (Article a : categoryElement.getArticles()) {
-                ArticleSearchResponseDTO articleWithoutUserDTOCurrent = mapper.map(a, ArticleSearchResponseDTO.class);
-                articleWithoutUserDTO.add(articleWithoutUserDTOCurrent);
+                CategorySearchResponseDTO categorySearchResponseDTO = mapper.map(a, CategorySearchResponseDTO.class);
+                categorySearchResponseDTOList.add(categorySearchResponseDTO);
             }
         }
-        return articleWithoutUserDTO;
+        return categorySearchResponseDTOList;
     }
 
-    public List<CategoryWithArticlesDTO> findAllArticles() {
-        List<CategoryWithArticlesDTO> categoryWithArticlesDTOList=new ArrayList<>();
-        List<Category>category=categoryRepository.findAll();
-        if(category.isEmpty()){
-            throw new NotFoundCategory("No found any categorues");
+    public List<CategoryGetAllResponse> getAllCategories() {
+        List<Category> category = categoryRepository.findAll();
+        List<CategoryGetAllResponse> list = new ArrayList<>();
+        for (Category c : category) {
+            CategoryGetAllResponse categoryGetAllResponse = new CategoryGetAllResponse(c);
+            list.add(categoryGetAllResponse);
         }
-        for(Category c:category){
-           CategoryWithArticlesDTO categoryWithArticlesDTO=new CategoryWithArticlesDTO(c);
-           List<ArticleWithoutUserDTO>setWithArticlesWithoutUser=new ArrayList<>();
+        return list;
+    }
 
-           for(Article a :c.getArticles()){
-            setWithArticlesWithoutUser.add( new ArticleWithoutUserDTO(a));
+    public CategoryWithoutArticleDTO editCategory(CategoryRequestEditDTO dto) {
+        CategoryWithoutArticleDTO currentDto = new CategoryWithoutArticleDTO();
+        Category category = categoryRepository.findCategoryById(dto.getId());
+        currentDto.setCategory(dto.getCategory());
+        currentDto.setId(dto.getId());
+        if (dto.getCategory() == null || dto.getCategory().trim().isEmpty()) {
+            throw new BadRequestException("New category cannot be null or empty");
+        }
+        List<Category> categorySet = categoryRepository.findAll();
+        for (Category cat : categorySet) {
+           if (cat.getCategory().equals(dto.getCategory())){
+               throw new BadRequestException("This category name is already added!");
            }
-           categoryWithArticlesDTO.setArticleWithoutUserDTO(setWithArticlesWithoutUser);
-           categoryWithArticlesDTOList.add(categoryWithArticlesDTO);
         }
-        return categoryWithArticlesDTOList;
+        category.setCategory(dto.getCategory());
+        categoryRepository.save(category);
+        return currentDto;
     }
 
-    public CategoryWithoutArticleDTO editCategory(CategoryRequestEditDTO category) {
-        CategoryWithoutArticleDTO currentCategory = new CategoryWithoutArticleDTO();
-        Category cat=categoryRepository.findCategoryById(category.getId());
-        currentCategory.setCategory(category.getCategory());
-        currentCategory.setId(category.getId());
-        cat.setCategory(category.getCategory());
-        categoryRepository.save(cat);
-        return currentCategory ;
+    public CategoryWithoutArticleDTO addCategory(CategoryWithoutArticleDTO dto) {
+        Category category = new Category();
+        if (dto.getCategory() == null || dto.getCategory().trim().isEmpty()) {
+            throw new BadRequestException("New category cannot be null or empty");
+        }
+        category.setCategory(dto.getCategory());
+        List<Category> categorySet = categoryRepository.findAll();
+        if (categorySet.contains(category)) {
+            throw new BadRequestException("This category is already added!");
+        }
+        categoryRepository.save(category);
+        CategoryWithoutArticleDTO currentDTO = new CategoryWithoutArticleDTO(category);
+        return currentDTO;
     }
 }

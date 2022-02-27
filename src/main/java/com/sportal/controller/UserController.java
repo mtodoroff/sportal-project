@@ -2,9 +2,9 @@ package com.sportal.controller;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.model.dto.MessageResponseDTO;
+import com.sportal.model.dto.commentDTOs.CommentEditResponseDTO;
 import com.sportal.model.dto.commentDTOs.CommentResponseDTO;
 import com.sportal.model.dto.userDTOs.*;
-import com.sportal.model.pojo.Comment;
 import com.sportal.model.pojo.User;
 import com.sportal.service.SessionService;
 
@@ -79,6 +79,10 @@ public class UserController {
 
     @PutMapping("/users/edit")
     public ResponseEntity<UserEditDTO> editUser(@RequestBody UserEditDTO userDTO, HttpSession session) {
+        User loggedUser = sessionService.getLoggedUser(session);
+        if (loggedUser.getId() != userDTO.getId()){
+            throw new BadRequestException("You don't have permission to change another accounts!");
+        }
         if (!sessionService.userAlreadyLogged(session)) {
             throw new BadRequestException("You must be logged in!");
         }

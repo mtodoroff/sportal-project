@@ -1,12 +1,13 @@
 package com.sportal.service;
 
 import com.sportal.exceptions.NotFoundException;
-import com.sportal.model.dto.articleDTOs.ArticleForPictureDTO;
+import com.sportal.model.dto.imageDTOs.ImageResponseDTO;
 import com.sportal.model.dto.imageDTOs.ImageUploadDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Picture;
 import com.sportal.model.repository.ArticleRepository;
 import com.sportal.model.repository.PictureRepository;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,9 +22,10 @@ public class PictureService {
     @Autowired
     ArticleRepository articleRepository;
 
-    public ArticleForPictureDTO uploadImage(String filePath, MultipartFile file, ImageUploadDTO imageUploadDTO) {
+    @SneakyThrows
+    public ImageResponseDTO uploadImage(String filePath, MultipartFile file, ImageUploadDTO imageUploadDTO) {
         File picFile = new File(filePath + File.separator + "_" + System.nanoTime() + ".png");
-        try (OutputStream os = new FileOutputStream(picFile)) {
+        OutputStream os = new FileOutputStream(picFile);
             os.write(file.getBytes());
             Picture picture = new Picture();
             Optional<Article> opt = articleRepository.findById(imageUploadDTO.getId());
@@ -34,15 +36,9 @@ public class PictureService {
             picture.setPic_url(picFile.getAbsolutePath());
             picture.setArticle_id(article);
             picture = pictureRepository.save(picture);
-            ArticleForPictureDTO dto=new ArticleForPictureDTO(picture);
+            ImageResponseDTO dto=new ImageResponseDTO(picture);
             pictureRepository.findById(picture.getId());
             return dto;
-        } catch (FileNotFoundException e) {
-            throw new NotFoundException("No files to upload" + e.getMessage());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
     }
 
     public long deleteImage(long imageId) {

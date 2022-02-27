@@ -1,10 +1,7 @@
 package com.sportal.controller;
 
 import com.sportal.model.dto.MessageResponseDTO;
-import com.sportal.model.dto.categoryDTOs.CategorySearchResponseDTO;
-import com.sportal.model.dto.categoryDTOs.CategoryRequestEditDTO;
-import com.sportal.model.dto.categoryDTOs.CategoryWithArticlesDTO;
-import com.sportal.model.dto.categoryDTOs.CategoryWithoutArticleDTO;
+import com.sportal.model.dto.categoryDTOs.*;
 import com.sportal.model.pojo.Category;
 import com.sportal.model.pojo.User;
 import com.sportal.model.repository.CategoryRepository;
@@ -33,18 +30,15 @@ public class CategoryController {
     CategoryRepository categoryRepository;
 
     @PostMapping("/categories")
-    public ResponseEntity<CategoryWithoutArticleDTO> addCategory(@RequestBody Category category, HttpSession session) {
+    public ResponseEntity<CategoryWithoutArticleDTO> addCategory(@RequestBody CategoryWithoutArticleDTO category, HttpSession session) {
         User user  = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
-        Category c = categoryService.createCategory(category);
-        CategoryWithoutArticleDTO dto=new CategoryWithoutArticleDTO();
-        dto.setCategory(category.getCategory());
-        return new ResponseEntity(dto, HttpStatus.CREATED);
+        return new ResponseEntity(categoryService.addCategory(category), HttpStatus.CREATED);
     }
 
     @GetMapping("/categories")
-    public List<CategoryWithArticlesDTO> getAllCategory() {
-        return categoryService.findAllArticles();
+    public List<CategoryGetAllResponse> getAllCategory() {
+        return categoryService.getAllCategories();
     }
 
     @DeleteMapping("/categories/{id}")

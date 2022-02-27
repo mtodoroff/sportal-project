@@ -1,4 +1,4 @@
-package com.sportal.model.dto.articleDTOs;
+package com.sportal.model.dto.imageDTOs;
 
 import com.sportal.model.pojo.Picture;
 import lombok.Getter;
@@ -8,13 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ArticleForPictureDTO {
-
+public class ImageResponseDTO {
 
     private String picUrl;
 
-    public ArticleForPictureDTO(Picture picture) {
-
+    public ImageResponseDTO(Picture picture) {
         this.picUrl = picture.getPic_url();
     }
 }

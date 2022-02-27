@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class AddArticleDTO {
-
+    private long id;
 
     private String title;
 

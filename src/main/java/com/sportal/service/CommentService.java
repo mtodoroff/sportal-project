@@ -2,11 +2,9 @@ package com.sportal.service;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundException;
-import com.sportal.model.dto.articleDTOs.ArticleResponseDTO;
 import com.sportal.model.dto.commentDTOs.CommentAddReplyRequestDTO;
 import com.sportal.model.dto.commentDTOs.CommentAddRequestDTO;
-import com.sportal.model.dto.commentDTOs.CommentEditRequestDTO;
-import com.sportal.model.dto.commentDTOs.CommentResponseDTO;
+import com.sportal.model.dto.commentDTOs.CommentEditResponseDTO;
 import com.sportal.model.pojo.Article;
 import com.sportal.model.pojo.Comment;
 import com.sportal.model.pojo.User;
@@ -19,8 +17,6 @@ import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 
@@ -35,16 +31,22 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public CommentResponseDTO addComment(User user, CommentAddRequestDTO addedComment){
+    public CommentEditResponseDTO addComment(User user, CommentAddRequestDTO addedComment){
         Article article = getArticleById(addedComment.getArticle_id());
         //TODO extract in method
         String commentText = addedComment.getComment_text();
         Validator.validateEmptyField(commentText,"Comment");
-        String crealedText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
+        String replacement = "******";
+        String crealedText = commentText.replaceAll(CensoredWords.getRegexCensorship(),replacement);
+//        if (crealedText.contains(replacement)){
+//            banUser(user);
+//        }
         Comment comment = new Comment(crealedText,article,user);
         article.getComments().add(comment);
         commentRepository.save(comment);
-        return new CommentResponseDTO(comment);
+        CommentEditResponseDTO commentEditResponseDTO = new CommentEditResponseDTO(comment);
+        commentEditResponseDTO.setMessage("Comment added successfully");
+        return commentEditResponseDTO;
     }
 
     public boolean userOwnsComment(long userId, long commentId) {
@@ -52,23 +54,28 @@ public class CommentService {
         return comment.getUser().getId() == userId;
     }
 
-    public ArticleResponseDTO addCommentReply(User loggedUser, CommentAddReplyRequestDTO reply) {
+    public CommentEditResponseDTO addCommentReply(User loggedUser, CommentAddReplyRequestDTO reply) {
         Comment parent = commentRepository.findById(reply.getParent_comment_id()).orElseThrow(() -> new NotFoundException("Comment not found!"));
         Article article = parent.getArticle();
         String commentText = reply.getComment_text();
         Validator.validateEmptyField(commentText,"Comment");
-        String crealedText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
-        Comment comment = new Comment(crealedText, article, loggedUser, parent);
+        String createdText = commentText.replaceAll(CensoredWords.getRegexCensorship(),"******");
+        Comment comment = new Comment(createdText, article, loggedUser, parent);
         commentRepository.save(comment);
-        return new ArticleResponseDTO(article);
+
+        CommentEditResponseDTO commentResponseDTO = new CommentEditResponseDTO();
+        commentResponseDTO.setId(comment.getId());
+        commentResponseDTO.setComment_text(reply.getComment_text());
+        commentResponseDTO.setPostDate(LocalDateTime.now());
+        commentResponseDTO.setMessage("Comment added successfully!");
+        return commentResponseDTO;
     }
 
     public void deleteComment(long commentId) {
         commentRepository.deleteById(commentId);
     }
 
-    @Transactional
-    public ArticleResponseDTO editComment(CommentEditRequestDTO editedComment) {
+    public CommentEditResponseDTO editComment(CommentEditResponseDTO editedComment) {
         Comment comment = getCommentById(editedComment.getId());
         String commentText = editedComment.getComment_text();
         Validator.validateEmptyField(commentText,"Comment");
@@ -76,12 +83,10 @@ public class CommentService {
         if (commentText.isEmpty()){
             throw new BadRequestException("Text cannot be empty!");
         }
-        comment.setCommentText(editedComment.getComment_text());
-        comment.setUpdated_at(LocalDateTime.now());
+        editedComment.setPostDate(LocalDateTime.now());
+        editedComment.setMessage("Comment edited sucessfully!");
         commentRepository.save(comment);
-        long articleId =  comment.getArticle().getId();
-        Article article = getArticleById(articleId);
-        return new ArticleResponseDTO(article);
+        return editedComment;
     }
 
     @Synchronized
