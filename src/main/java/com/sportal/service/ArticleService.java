@@ -51,6 +51,8 @@ public class ArticleService {
         validateArticle(articleDTO);
         User u = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Owner not found"));
         Article article = new Article(articleDTO, u);
+        article.setCreated_at(LocalDateTime.now());
+        article.setUpdated_at(LocalDateTime.now());
         Category category = categoryRepository.findCategoryById(articleDTO.getCategory_id());
         if (category == null) {
             throw new NotFoundCategory("Not found category");
@@ -64,22 +66,23 @@ public class ArticleService {
     }
 
     private void validateArticle(AddArticleDTO article) {
-        if (article.getContent() == null || article.getTitle() == null) {
+        if (article.getContent() == null || article.getTitle() == null || article.getContent().trim().isEmpty() || article.getTitle().trim().isEmpty() ) {
             throw new InvalidArticle("All fields are mandatory");
         }
     }
 
 
-    public List<ArticleSearchResponseDTO> searchByCategory(int pageNumber, int pageSize, String title) {
+    public List<ArticleSearchResponseDTO> searchByTitle(int pageNumber, int pageSize, String title) {
         if (pageNumber < 0 || pageSize < 0) {
-            throw new NotFoundException("Not found Article with name");
+            throw new NotFoundException("Not valid parameter");
         }
         Pageable pageable = PageRequest.of(pageSize, pageNumber);
-        List<Article> art =articleRepository.findByTitleUsingLikeCategory(title, pageable);;
+        List<Article> art = articleRepository.findByTitleUsingLike(title, pageable);
+
         List<ArticleSearchResponseDTO> searchResponseDTOS = new ArrayList<>();
         verifyArticleId(art == null, "Article not found");
         Picture defaultPicture = new Picture();
-        defaultPicture.setPic_url("./article_images/sportal.png");
+        defaultPicture.setPic_url("article_images/sportal.png");
         defaultPicture.setId(1);
         for (Article a : art) {
             ArticleSearchResponseDTO current = new ArticleSearchResponseDTO();
@@ -98,7 +101,7 @@ public class ArticleService {
         verifyArticleId(articleId <= 0, "Not found Article");
         Article article = getArticleById(articleId);
         User user = getUserById(userId);
-        if (user.getLikedComments().contains(article)) {
+        if (user.getLikedArticles().contains(article)) {
             throw new BadRequestException("You already liked this article!");
         }
         article.getLikedArticles().add(user);
@@ -202,20 +205,20 @@ public class ArticleService {
     }
 
     public List<ArticleWithoutUserDTO> getMostComment() {
-        List<Article>art=articleRepository.findByMostComment();
-        List<ArticleWithoutUserDTO>article=new ArrayList<>();
-        for(Article a:art){
-            ArticleWithoutUserDTO dto=new ArticleWithoutUserDTO(a);
+        List<Article> art = articleRepository.findByMostComment();
+        List<ArticleWithoutUserDTO> article = new ArrayList<>();
+        for (Article a : art) {
+            ArticleWithoutUserDTO dto = new ArticleWithoutUserDTO(a);
             article.add(dto);
         }
         return article;
     }
 
     public List<ArticleWithoutUserDTO> getLeadNews() {
-        List<Article>art=articleRepository.findLeadNews();
-        List<ArticleWithoutUserDTO>article=new ArrayList<>();
-        for(Article a:art){
-            ArticleWithoutUserDTO dto=new ArticleWithoutUserDTO(a);
+        List<Article> art = articleRepository.findLeadNews();
+        List<ArticleWithoutUserDTO> article = new ArrayList<>();
+        for (Article a : art) {
+            ArticleWithoutUserDTO dto = new ArticleWithoutUserDTO(a);
             article.add(dto);
         }
         return article;

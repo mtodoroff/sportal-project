@@ -23,7 +23,7 @@ public class ArticleController {
     SessionService sessionService;
 
 
-    @PostMapping("/articles/add")
+    @PostMapping("/articles")
     public ResponseEntity<ArticleResponseDTO> add(@RequestBody AddArticleDTO article, HttpSession session) {
         User user = sessionService.getLoggedUser(session);
         sessionService.validateAdmin(user);
@@ -38,10 +38,12 @@ public class ArticleController {
     }
 
     @GetMapping("/articles/search")
-    public List<ArticleSearchResponseDTO> searchByCategory(@RequestParam(value = "pageNumber") int pageNumber,
-                                                           @RequestParam(value = "pageSize") int pageSize,
-                                                           @RequestParam(value = "category") String title) {
-        return articleService.searchByCategory(pageNumber, pageSize, title);
+    public List<ArticleSearchResponseDTO> searchByTitle(
+            @RequestParam(value = "title") String title,
+            @RequestParam(value = "pageSize") int pageSize,
+            @RequestParam(value = "pageNumber") int pageNumber
+    ) {
+        return articleService.searchByTitle(pageNumber, pageSize, title);
     }
 
 
@@ -55,12 +57,12 @@ public class ArticleController {
         return articleService.getTopFiveMostViewed();
     }
 
-    @GetMapping("most_comment")
+    @GetMapping("/most_comment")
     public List<ArticleWithoutUserDTO> mostComment() {
         return articleService.getMostComment();
     }
 
-    @GetMapping("lead_news")
+    @GetMapping("/lead_news")
     public List<ArticleWithoutUserDTO> leadNews() {
         return articleService.getLeadNews();
     }

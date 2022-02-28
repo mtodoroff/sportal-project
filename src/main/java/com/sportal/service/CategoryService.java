@@ -2,6 +2,7 @@ package com.sportal.service;
 
 import com.sportal.exceptions.BadRequestException;
 import com.sportal.exceptions.NotFoundCategory;
+import com.sportal.exceptions.NotFoundException;
 import com.sportal.model.dto.articleDTOs.ArticleSearchResponseDTO;
 import com.sportal.model.dto.articleDTOs.ArticleWithoutUserDTO;
 
@@ -15,6 +16,8 @@ import com.sportal.model.pojo.Category;
 import com.sportal.model.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,21 +30,24 @@ public class CategoryService {
     ModelMapper mapper;
 
 
-    public List<CategorySearchResponseDTO> searchByCategory(String category) {
-        List<Category> categoryList = categoryRepository.findByCategoryUsingLike(category);
-        if (category.trim().isEmpty() || categoryList == null) {
+    public List<ArticleSearchResponseDTO> searchByCategory(String category,int pageSize,int pageNumber) {
+        if (pageNumber < 0 || pageSize < 0) {
+            throw new NotFoundException("Not valid parameter");
+        }
+
+        Pageable pageable = PageRequest.of(pageSize, pageNumber);
+        List<Article> articleList = categoryRepository.findByTitleUsingLikeCategory(category,pageable);
+        if (category.trim().isEmpty() || articleList == null) {
             throw new NotFoundCategory("Category not found");
         }
 
-        List<CategorySearchResponseDTO> categorySearchResponseDTOList = new ArrayList<>();
+        List<ArticleSearchResponseDTO> articleSearchResponseDTOS = new ArrayList<>();
 
-        for (Category categoryElement : categoryList) {
-            for (Article a : categoryElement.getArticles()) {
-                CategorySearchResponseDTO categorySearchResponseDTO = mapper.map(a, CategorySearchResponseDTO.class);
-                categorySearchResponseDTOList.add(categorySearchResponseDTO);
-            }
+        for (Article article : articleList) {
+                ArticleSearchResponseDTO articleSearchResponseDTO = mapper.map(article, ArticleSearchResponseDTO.class);
+                articleSearchResponseDTOS.add(articleSearchResponseDTO);
         }
-        return categorySearchResponseDTOList;
+        return articleSearchResponseDTOS;
     }
 
 
@@ -51,6 +57,10 @@ public class CategoryService {
         if (category.isEmpty()) {
             throw new NotFoundCategory("No found any categories");
 
+        }
+        for (Category cat : category) {
+            CategoryWithArticlesDTO categoryWithArticlesDTO = new CategoryWithArticlesDTO(cat);
+                list.add(categoryWithArticlesDTO);
         }
         return list;
     }

@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 @NoArgsConstructor
 @Getter
@@ -18,6 +19,9 @@ public class ArticleResponseDTO {
     private String title;
     private String content;
     private long views;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+
     private List<Comment> comments;
 
     public ArticleResponseDTO(Article article){
@@ -26,5 +30,7 @@ public class ArticleResponseDTO {
         this.content = article.getContent();
         this.views = article.getViews();
         this.comments = article.getComments();
+        this.created_at = article.getCreated_at();
+        this.updated_at = article.getUpdated_at();
     }
 }

@@ -72,9 +72,10 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<MessageResponseDTO> deleteUser(@PathVariable long id) {
+    public ResponseEntity<MessageResponseDTO> deleteUser(@PathVariable long id,HttpSession session) {
         userService.deleteUser(id);
-        return new ResponseEntity(new MessageResponseDTO("You successfully deleted this user"), HttpStatus.OK);
+        session.invalidate();
+        return new ResponseEntity(new MessageResponseDTO("You successfully deleted your profile"), HttpStatus.OK);
     }
 
     @PutMapping("/users/edit")

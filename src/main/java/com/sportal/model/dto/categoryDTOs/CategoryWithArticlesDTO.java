@@ -14,7 +14,6 @@ import java.util.List;
 public class CategoryWithArticlesDTO {
     private long id;
     private String category;
-    private List<ArticleWithoutUserDTO> articleWithoutUserDTO;
 
     public CategoryWithArticlesDTO(Category category){
         this.id=category.getId();

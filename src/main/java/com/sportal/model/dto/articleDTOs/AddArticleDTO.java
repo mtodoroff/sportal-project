@@ -16,6 +16,7 @@ public class AddArticleDTO {
 
     private String content;
 
+
     private long category_id;
 
 }
