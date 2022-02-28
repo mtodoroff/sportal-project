@@ -66,19 +66,18 @@ public class CategoryService {
     }
 
     public CategoryWithoutArticleDTO editCategory(CategoryRequestEditDTO dto) {
-        CategoryWithoutArticleDTO currentDto = new CategoryWithoutArticleDTO();
+
         Category category = categoryRepository.findCategoryById(dto.getId());
-        currentDto.setCategory(dto.getCategory());
+        CategoryWithoutArticleDTO currentDto = new CategoryWithoutArticleDTO(category);
         if (dto.getCategory() == null || dto.getCategory().trim().isEmpty()) {
             throw new BadRequestException("New category cannot be null or empty");
         }
         List<Category> categorySet = categoryRepository.findAll();
         for (Category cat : categorySet) {
-            if (cat.getCategory().equals(dto.getCategory())) {
+            if (cat.getCategory().trim().equals(dto.getCategory())) {
                 throw new BadRequestException("This category name is already added!");
             }
         }
-        category.setCategory(dto.getCategory());
         categoryRepository.save(category);
         return currentDto;
     }
