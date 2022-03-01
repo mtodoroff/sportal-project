@@ -152,11 +152,18 @@ public class UserService {
         String newPassword = PasswordBuilder.generatePassword(20);
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        SimpleMailMessage message = new SimpleMailMessage();
-        String msg = "Hello "+ user.getUsername() + "\n" + "Your new password is: " + newPassword;
-        message.setTo(user.getEmail());
-        message.setSubject("Sprotal Password change");
-        message.setText(msg);
-        emailSender.send(message);
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                SimpleMailMessage message = new SimpleMailMessage();
+                String msg = "Hello "+ user.getUsername() + "\n" + "Your new password is: " + newPassword;
+                message.setTo(user.getEmail());
+                message.setSubject("Sprotal Password change");
+                message.setText(msg);
+                emailSender.send(message);
+            }
+        };
+
+        new Thread(r).start();
     }
 }
