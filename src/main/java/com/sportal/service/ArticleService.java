@@ -16,6 +16,7 @@ import com.sportal.model.repository.ArticleRepository;
 import com.sportal.model.repository.CategoryRepository;
 import com.sportal.model.repository.UserRepository;
 import lombok.Synchronized;
+import org.hibernate.engine.internal.Collections;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -163,7 +164,7 @@ public class ArticleService {
 
     @Synchronized
     public ArticleWithoutUserDTO getById(long articleId) {
-        verifyArticleId(articleId <= 0, "Not found Article");
+        verifyArticleId(articleId <= 0, "Article not found");
         Optional<Article> opt = articleRepository.findById(articleId);
         verifyArticleId(!opt.isPresent(), "The article not found");
 
@@ -222,5 +223,14 @@ public class ArticleService {
             article.add(dto);
         }
         return article;
+    }
+
+    public List<List<ArticleWithoutUserDTO>>  getFirstScrollArticles() {
+        List<List<ArticleWithoutUserDTO>> list = new ArrayList<>();
+        list.add(getLeadNews());
+        list.add(getTopFiveMostViewed());
+        list.add(getMostComment());
+        list.add(latestArticles());
+        return list;
     }
 }
